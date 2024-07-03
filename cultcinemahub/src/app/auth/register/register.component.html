@@ -1,0 +1,32 @@
+<div class="register-wrapper d-flex justify-content-center align-items-center">
+  <form class="d-flex flex-column gap-3 p-5 col-6 m-auto text-white" #registerForm="ngForm" (ngSubmit)="signUp()">
+    <h1>Registrati</h1>
+
+    <input type="text" name="firstName" [(ngModel)]="registerData.firstName" #firstName="ngModel"
+      class="form-control" placeholder="nome" required>
+    <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)" class="text-danger fw-bold">
+      Nome obbligatorio
+    </div>
+
+    <input type="text" name="lastName" [(ngModel)]="registerData.lastName" #lastName="ngModel"
+      class="form-control" placeholder="cognome" required>
+    <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="text-danger fw-bold">
+      Cognome obbligatorio
+    </div>
+
+    <input type="email" name="email" [(ngModel)]="registerData.email" #email="ngModel"
+      class="form-control register-text" placeholder="email" required email>
+    <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger fw-bold">
+      Email obbligatoria e deve essere in formato corretto
+    </div>
+
+    <input type="password" name="password" [(ngModel)]="registerData.password" #password="ngModel"
+      class="form-control register-text" placeholder="password" required>
+    <div *ngIf="password.invalid && (password.dirty || password.touched)" class="text-danger fw-bold">
+      Password obbligatoria
+    </div>
+
+    <button type="submit" [disabled]="registerForm.invalid" class="btn  mt-2">Registrati</button>
+    <div *ngIf="registerForm.invalid" > Compila tutti i campi per poter proseguire. </div>
+  </form>
+</div>

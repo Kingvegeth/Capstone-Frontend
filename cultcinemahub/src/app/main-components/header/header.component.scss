@@ -1,0 +1,30 @@
+@import '../../../styles/colors';
+
+header{
+
+  height: 140px;
+
+  background-color: #000;
+  backdrop-filter: blur(20px);
+
+  font-family: "Bebas Neue", sans-serif;
+  transition: all 0.3s ease;
+  font-size: 2.5em;
+}
+
+.text-end a{
+  text-decoration: none;
+  color: #fff;
+}
+
+
+header.scrolled {
+  background-color: rgba(12, 12, 12, 0.829);
+  height: 70px;
+  font-size: 2em;
+}
+
+img{
+  height: 50px;
+  cursor: pointer;
+}

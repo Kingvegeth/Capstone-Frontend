@@ -1,0 +1,38 @@
+.btn {
+  width: 130px;
+  height: 40px;
+  font-size: 1.1em;
+  cursor: pointer;
+  background-color: #6D1666;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  transition: all .4s;
+ }
+
+ .btn:hover {
+  border-radius: 5px;
+  transform: translateY(-10px);
+  box-shadow: 5px 7px 0 -2px #cb2376,
+   10px 15px 0 -4px #39a2db,
+   10px 16px 10px -3px #39a2db;
+ }
+
+ .btn:active {
+  transition: all 0.2s;
+  transform: translateY(-5px);
+  background-color: #6D1666;
+  box-shadow: 5px 2px 0 -2px #cb2376,
+   10px 8px 0 -4px #39a2db,
+   10px 12px 10px -3px #39a2db;
+ }
+
+ body{
+
+  background-size: cover;
+}
+
+
+.register-wrapper{
+  margin-block: 50px;
+}
