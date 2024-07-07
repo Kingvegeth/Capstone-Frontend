@@ -1,0 +1,27 @@
+<div class="movies-container text-white">
+  <h1 class="text-center">Elenco dei Film</h1>
+  <button *ngIf="isAdmin$ | async" class="btn btn-primary mt-3" (click)="openAddMovieModal()">Add Movie</button>
+  <div *ngIf="movies.length === 0" class="alert alert-warning">Nessun film disponibile.</div>
+
+  <div class="row gy-4">
+    <div *ngFor="let movie of movies" class="col-md-4">
+      <div class="card mb-4 h-100" (click)="goToMovieDetails(movie.id)">
+        <div class="card-img-container">
+          <img
+            [src]="movie.posterImg || 'assets/img/default/default-movie.png'"
+            (error)="onImageError($event)"
+            class="card-img-top"
+            alt="{{ movie.title }} Poster">
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ movie.title }}</h5>
+          <p class="card-text">{{ movie.description }}</p>
+          <p><strong>Anno:</strong> {{ movie.year }}</p>
+          <p><strong>Durata:</strong> {{ movie.duration }} minuti</p>
+          <p><strong>Generi:</strong> {{ getGenres(movie) }}</p>
+          <button *ngIf="isAdmin$ | async" class="btn btn-secondary mt-3" (click)="openEditMovieModal(movie); $event.stopPropagation()">Modifica</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

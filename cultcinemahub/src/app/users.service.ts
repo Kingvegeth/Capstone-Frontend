@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { iUser } from './Models/iuser';
+import { iUser } from './models/iuser';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { environment } from '../environments/environment.development';
 import { Observable } from 'rxjs';
@@ -9,26 +9,14 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UsersService {
+  private usersUrl = environment.usersUrl;
+  private usersSubject = new BehaviorSubject<iUser[]>([]);
+  public $users = this.usersSubject.asObservable();
 
-  usersUrl = environment.usersUrl;
+  constructor(private http: HttpClient) {}
 
-  usersArray: iUser[]=[]
-
-  usersSubject = new BehaviorSubject<iUser[]>([]);
-
-  $users = this.usersSubject.asObservable()
-
-  constructor(private http:HttpClient){
-    this.getAll().subscribe(data => {
-      this.usersSubject.next(data)
-      this.usersArray = data;
-    })
-  }
-
-
-
-  getAll(){
-    return this.http.get<iUser[]>(this.usersUrl)
+  getAll(): Observable<iUser[]> {
+    return this.http.get<iUser[]>(this.usersUrl);
   }
 
   getUserById(id: number): Observable<iUser> {
@@ -36,12 +24,20 @@ export class UsersService {
     return this.http.get<iUser>(url);
   }
 
-  updateUsersList(): void {
-    this.getAll().subscribe(users => {
-      this.usersSubject.next(users);
-    });
+  getCurrentUser(): Observable<iUser> {
+    const url = `${this.usersUrl}/me`;
+    return this.http.get<iUser>(url);
   }
 
+  updateUser(user: iUser): Observable<iUser> {
+    const url = `${this.usersUrl}/edit`;
+    return this.http.patch<iUser>(url, user);
+  }
 
-
+  uploadAvatar(file: File): Observable<iUser> {
+    const formData = new FormData();
+    formData.append('avatar', file);
+    const url = `${this.usersUrl}/avatar`;
+    return this.http.patch<iUser>(url, formData);
+  }
 }

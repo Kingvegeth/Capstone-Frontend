@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
-import { iLoginData } from '../../Models/ilogindata';
+import { iLoginData } from '../../models/ilogindata';
 
 @Component({
   selector: 'app-login',
@@ -32,7 +32,7 @@ export class LoginComponent {
     this.authSvc.login(this.loginData, this.rememberMe)
       .subscribe({
         next: (data) => {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/wip']);
         },
         error: (error) => {
           console.error('Errore durante il login:', error);

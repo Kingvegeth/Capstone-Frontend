@@ -1,0 +1,47 @@
+<div class="modal-header">
+  <h5 class="modal-title">Modifica Film</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
+</div>
+<div class="modal-body">
+  <form>
+    <div class="form-group">
+      <label for="title">Titolo</label>
+      <input type="text" class="form-control" id="title" [(ngModel)]="movie.title" name="title" required>
+    </div>
+    <div class="form-group">
+      <label for="year">Anno</label>
+      <input type="number" class="form-control" id="year" [(ngModel)]="movie.year" name="year" required>
+    </div>
+    <div class="form-group">
+      <label for="duration">Durata (minuti)</label>
+      <input type="number" class="form-control" id="duration" [(ngModel)]="movie.duration" name="duration" required>
+    </div>
+    <div class="form-group">
+      <label for="description">Descrizione</label>
+      <textarea class="form-control" id="description" [(ngModel)]="movie.description" name="description" required></textarea>
+    </div>
+    <div class="form-group">
+      <label for="genres">Generi</label>
+      <div *ngFor="let genre of selectedGenres; let i = index" class="d-flex mb-2">
+        <select class="form-control mr-2" [(ngModel)]="selectedGenres[i]" name="genre{{i}}" required>
+          <option *ngFor="let g of allGenres" [value]="g">{{g}}</option>
+        </select>
+        <button type="button" class="btn btn-danger" (click)="removeGenre(i)">Rimuovi</button>
+      </div>
+      <button type="button" class="btn btn-secondary" (click)="addGenre()">Aggiungi Genere</button>
+    </div>
+    <div class="form-group">
+      <label for="poster">Poster</label>
+      <input type="file" class="form-control-file" id="poster" (change)="onFileSelected($event)">
+      <img *ngIf="previewUrl" [src]="previewUrl" class="img-fluid mt-2">
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss()">Chiudi</button>
+  <button type="button" class="btn btn-danger" (click)="deleteMovie()">Elimina</button>
+  <button type="button" class="btn btn-primary" (click)="updateMovie()" [disabled]="isLoading">
+    <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    Salva modifiche
+  </button>
+</div>

@@ -1,0 +1,23 @@
+<div class="modal-header">
+  <h5 class="modal-title">Edit Person</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
+</div>
+<div class="modal-body">
+  <div class="mb-3">
+    <label for="firstName" class="form-label">First Name</label>
+    <input type="text" id="firstName" [(ngModel)]="person.firstName" class="form-control">
+  </div>
+  <div class="mb-3">
+    <label for="lastName" class="form-label">Last Name</label>
+    <input type="text" id="lastName" [(ngModel)]="person.lastName" class="form-control">
+  </div>
+  <div class="mb-3">
+    <label for="dateOfBirth" class="form-label">Date of Birth</label>
+    <input type="date" id="dateOfBirth" [(ngModel)]="person.dateOfBirth" class="form-control">
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss()">Close</button>
+  <button type="button" class="btn btn-danger" (click)="deletePerson()">Delete</button>
+  <button type="button" class="btn btn-primary" (click)="updatePerson()">Save changes</button>
+</div>

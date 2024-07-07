@@ -1,0 +1,72 @@
+<div class="modal-header">
+  <h5 class="modal-title">Add Movie</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
+</div>
+<div class="modal-body">
+  <form>
+    <div class="mb-3">
+      <label for="title" class="form-label">Titolo</label>
+      <input type="text" class="form-control" id="title" [(ngModel)]="movie.title" name="title">
+    </div>
+    <div class="mb-3">
+      <label for="year" class="form-label">Anno</label>
+      <input type="number" class="form-control" id="year" [(ngModel)]="movie.year" name="year">
+    </div>
+    <div class="mb-3">
+      <label for="duration" class="form-label">Durata (minuti)</label>
+      <input type="number" class="form-control" id="duration" [(ngModel)]="movie.duration" name="duration">
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Descrizione</label>
+      <textarea class="form-control" id="description" [(ngModel)]="movie.description" name="description"></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="genres" class="form-label">Generi</label>
+      <select multiple class="form-select" [(ngModel)]="selectedGenres" name="genres">
+        <option *ngFor="let genre of allGenres" [ngValue]="genre">{{ genre }}</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="poster" class="form-label">Poster</label>
+      <input type="file" class="form-control" id="poster" (change)="onFileSelected($event)">
+      <img *ngIf="previewUrl" [src]="previewUrl" class="img-thumbnail mt-2" alt="Preview">
+    </div>
+    <div class="mb-3">
+      <label for="cast" class="form-label">Cast</label>
+      <select multiple class="form-select" [(ngModel)]="selectedCast" name="cast">
+        <option *ngFor="let person of allPeople" [ngValue]="person.id">{{ person.firstName }} {{ person.lastName }}</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="directors" class="form-label">Registi</label>
+      <select multiple class="form-select" [(ngModel)]="selectedDirectors" name="directors">
+        <option *ngFor="let person of allPeople" [ngValue]="person.id">{{ person.firstName }} {{ person.lastName }}</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="screenwriters" class="form-label">Sceneggiatori</label>
+      <select multiple class="form-select" [(ngModel)]="selectedScreenwriters" name="screenwriters">
+        <option *ngFor="let person of allPeople" [ngValue]="person.id">{{ person.firstName }} {{ person.lastName }}</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="producers" class="form-label">Produttori</label>
+      <select multiple class="form-select" [(ngModel)]="selectedProducers" name="producers">
+        <option *ngFor="let company of allCompanies" [ngValue]="company.id">{{ company.name }}</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="distributor" class="form-label">Distributore</label>
+      <select class="form-select" [(ngModel)]="selectedDistributor" name="distributor">
+        <option *ngFor="let company of allCompanies" [ngValue]="company.id">{{ company.name }}</option>
+      </select>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss()">Chiudi</button>
+  <button type="button" class="btn btn-primary" (click)="addMovie()" [disabled]="isLoading">
+    <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    Aggiungi Film
+  </button>
+</div>

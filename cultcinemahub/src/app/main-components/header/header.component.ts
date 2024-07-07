@@ -17,9 +17,8 @@ export class HeaderComponent {
     this.authSvc.isLoggedIn$.subscribe(data => {
       this.isUserLoggedIn = data;
     });
-    this.authSvc.user$.subscribe(user => {
-      this.isAdmin = !!user && user.admin;
-
+    this.authSvc.isAdmin().subscribe(isAdmin => {
+      this.isAdmin = isAdmin;
     });
   }
 
@@ -29,7 +28,7 @@ export class HeaderComponent {
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
-    if (window.pageYOffset > 155) {
+    if (window.scrollY > 155) {
       this.scrolled = true;
     } else {
       this.scrolled = false;

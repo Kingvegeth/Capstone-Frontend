@@ -8,19 +8,7 @@ import { AuthService } from './auth/auth.service';
 })
 export class AppComponent {
   title = 'cultcinemahub';
-  isUserLoggedIn:boolean = false;
-  isAdmin:boolean = false
 
-  constructor(public authSvc: AuthService) {}
 
-  ngOnInit() {
-    this.authSvc.isLoggedIn$.subscribe(data => {
-      this.isUserLoggedIn = data;
-    });
-    this.authSvc.user$.subscribe(user => {
-      this.isAdmin = !!user && user.admin;
-
-    });
-  }
 
 }

@@ -1,0 +1,33 @@
+<div class="container">
+  <div *ngIf="movie" class="movie-details-container text-white">
+    <h1 class="text-center">{{ movie.title }}</h1>
+    <div class="row">
+      <div class="col-md-6">
+        <img
+        [src]="movie.posterImg || 'assets/img/default/default-movie.png'"
+        (error)="onImageError($event)"
+        class="img-fluid"
+        alt="{{ movie.title }} Poster">
+      </div>
+      <div class="col-md-6">
+        <p><strong>Anno:</strong> {{ movie.year }}</p>
+        <p><strong>Durata:</strong> {{ movie.duration }} minuti</p>
+        <p><strong>Generi:</strong> {{ getGenres() }}</p>
+        <p><strong>Descrizione:</strong> {{ movie.description }}</p>
+        <p><strong>Valutazione Media:</strong>
+          {{ getAverageRating() }}
+          <!-- <span *ngFor="let star of getStarRating(movie.averageRating)">
+            &#9733;
+          </span> -->
+
+        </p>
+        <p><strong>Cast:</strong> {{ getCast() }}</p>
+        <p><strong>Regia:</strong> {{ getDirectors() }}</p>
+        <p><strong>Sceneggiatura:</strong> {{ getScreenwriters() }}</p>
+        <p><strong>Casa di produzione:</strong> {{ getProducers() }}</p>
+        <p><strong>Distribuito da:</strong> {{ movie.distributor?.name || 'N/A' }}</p>
+        <p><strong>Recensioni:</strong> {{ getReviews() }}</p>
+      </div>
+    </div>
+  </div>
+</div>
