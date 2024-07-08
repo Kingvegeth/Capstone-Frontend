@@ -4,6 +4,7 @@ import { iPerson } from '../../models/iperson';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EditPersonModalComponent } from '../../shared/edit-person-modal/edit-person-modal.component';
 import { AddPersonModalComponent } from '../../shared/add-person-modal/add-person-modal.component';
+import { AuthService } from '../../auth/auth.service';
 
 
 @Component({
@@ -14,11 +15,15 @@ import { AddPersonModalComponent } from '../../shared/add-person-modal/add-perso
 export class PeopleComponent implements OnInit {
 
   people: iPerson[] = [];
+  isAdmin:boolean = false
 
-  constructor(private personService: PersonService, private modalService: NgbModal) { }
+  constructor(private personService: PersonService, private authSvc: AuthService, private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.loadPeople();
+    this.authSvc.isAdmin().subscribe(isAdmin => {
+      this.isAdmin = isAdmin;
+    });
   }
 
   loadPeople(): void {

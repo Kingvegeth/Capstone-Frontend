@@ -13,7 +13,7 @@ export class MovieDetailsComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private movieService: MovieService
+    private movieSvc: MovieService
   ) {}
 
   ngOnInit(): void {
@@ -22,7 +22,7 @@ export class MovieDetailsComponent {
 
   getMovieDetails(): void {
     const id = +this.route.snapshot.paramMap.get('id')!;
-    this.movieService.getMovieById(id).subscribe((movie: iMovie) => {
+    this.movieSvc.getMovieById(id).subscribe((movie: iMovie) => {
       console.log('Received movie data:', movie);
       this.movie = movie;
     });
@@ -30,7 +30,7 @@ export class MovieDetailsComponent {
 
   getGenres(): string {
     console.log(this.movie?.genres); // Aggiungi un log per il debug
-    return this.movie?.genres.join(', ') || 'N/A';
+    return this.movie?.genres?.join(', ') || 'N/A';
   }
 
   getCast(): string {

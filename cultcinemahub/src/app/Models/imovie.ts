@@ -21,9 +21,6 @@ export interface iMovie {
   averageRating?: number;
 }
 
-export interface iGenre {
-  id: number;
-  name: string;
-}
+export type iGenre = string;
 
 

@@ -76,13 +76,13 @@ export class AddMovieModalComponent {
       year: this.movie.year!,
       duration: this.movie.duration!,
       description: this.movie.description!,
-      genres: this.selectedGenres.map(g => ({ id: 0, name: g.trim().toUpperCase() } as iGenre)), // Convert genres to iGenre objects
+      genres: this.selectedGenres.map(g => g.trim().toUpperCase() as iGenre),
       posterImg: this.movie.posterImg || '',
       cast: this.selectedCast.map(id => ({ id } as iPerson)),
       directors: this.selectedDirectors.map(id => ({ id } as iPerson)),
       screenwriters: this.selectedScreenwriters.map(id => ({ id } as iPerson)),
       producers: this.selectedProducers.map(id => ({ id } as iCompany)),
-      distributor: this.selectedDistributor !== null ? { id: this.selectedDistributor, name: '' } as iCompany : undefined
+      distributor: this.selectedDistributor ? { id: this.selectedDistributor } as iCompany : undefined
     };
 
     console.log('Creating movie with data:', newMovie);

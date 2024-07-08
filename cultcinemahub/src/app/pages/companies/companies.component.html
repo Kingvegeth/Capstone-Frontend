@@ -1,6 +1,6 @@
 <div class="container mt-4">
   <h1>Company List</h1>
-  <button class="btn btn-primary mb-3" (click)="openAddCompanyModal()">Add Company</button>
+  <button *ngIf="isAdmin" class="btn btn-primary mb-3" (click)="openAddCompanyModal()">Add Company</button>
   <table class="table table-striped">
     <thead>
       <tr>
@@ -14,8 +14,8 @@
         <td>{{ company.id }}</td>
         <td>{{ company.name }}</td>
         <td>
-          <button class="btn btn-sm btn-warning me-2" (click)="openEditCompanyModal(company)">Edit</button>
-          <button class="btn btn-sm btn-danger" (click)="deleteCompany(company.id)">Delete</button>
+          <button *ngIf="isAdmin" class="btn btn-sm btn-warning me-2" (click)="openEditCompanyModal(company)">Edit</button>
+          <button *ngIf="isAdmin" class="btn btn-sm btn-danger" (click)="deleteCompany(company.id)">Delete</button>
         </td>
       </tr>
     </tbody>

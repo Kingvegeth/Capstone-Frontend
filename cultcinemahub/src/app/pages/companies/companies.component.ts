@@ -4,6 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CompanyService } from '../../services/company.service';
 import { AddCompanyModalComponent } from '../../shared/add-company-modal/add-company-modal.component';
 import { EditCompanyModalComponent } from '../../shared/edit-company-modal/edit-company-modal.component';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-companies',
@@ -12,11 +13,16 @@ import { EditCompanyModalComponent } from '../../shared/edit-company-modal/edit-
 })
 export class CompaniesComponent {
   companies: iCompany[] = [];
+  isAdmin:boolean = false
 
-  constructor(private companySvc: CompanyService, private modalService: NgbModal) {}
+
+  constructor(private companySvc: CompanyService, private authSvc: AuthService , private modalService: NgbModal) {}
 
   ngOnInit(): void {
     this.loadCompanies();
+    this.authSvc.isAdmin().subscribe(isAdmin => {
+      this.isAdmin = isAdmin;
+    });
   }
 
   loadCompanies() {

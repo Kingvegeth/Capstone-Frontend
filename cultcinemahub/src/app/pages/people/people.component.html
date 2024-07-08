@@ -1,6 +1,6 @@
 <div class="container mt-4">
   <h1>People List</h1>
-  <button class="btn btn-primary mb-3" (click)="openAddPersonModal()">Add Person</button>
+  <button *ngIf="isAdmin" class="btn btn-primary mb-3" (click)="openAddPersonModal()">Add Person</button>
   <table class="table table-striped">
     <thead>
       <tr>
@@ -18,8 +18,8 @@
         <td>{{ person.lastName }}</td>
         <td>{{ person.dateOfBirth | date:'dd-MM-yyyy' }}</td>
         <td>
-          <button class="btn btn-sm btn-warning me-2" (click)="openEditPersonModal(person)">Edit</button>
-          <button class="btn btn-sm btn-danger" (click)="deletePerson(person.id)">Delete</button>
+          <button *ngIf="isAdmin" class="btn btn-sm btn-warning me-2" (click)="openEditPersonModal(person)">Edit</button>
+          <button *ngIf="isAdmin" class="btn btn-sm btn-danger" (click)="deletePerson(person.id)">Delete</button>
         </td>
       </tr>
     </tbody>

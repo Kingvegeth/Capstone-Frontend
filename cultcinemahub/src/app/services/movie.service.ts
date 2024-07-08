@@ -6,6 +6,7 @@ import { map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { iMovie } from '../models/imovie';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -19,7 +20,7 @@ export class MovieService {
     return this.http.get<iMovie[]>(this.moviesUrl).pipe(
       map(movies => movies.map(movie => ({
         ...movie,
-        genresText: movie.genres.map(g => g.name).join(', ')
+        genresText: movie.genres.map(g => g).join(', ')
       })))
     );
   }
@@ -29,7 +30,6 @@ export class MovieService {
   }
 
   createMovie(movie: iMovie): Observable<iMovie> {
-    console.log('Sending movie to backend:', movie);
     return this.http.post<iMovie>(this.moviesUrl, movie);
   }
 
