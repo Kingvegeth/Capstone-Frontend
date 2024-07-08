@@ -30,6 +30,38 @@
       <p class="card-text"><strong>Valutazione:</strong> {{ review.rating }} / 10</p>
       <p class="card-text"><strong>Data di creazione:</strong> {{ review.createdAt | date: 'short' }}</p>
       <p class="card-text text-end">Scritta da: <strong>{{ review.user?.username ?? 'Unknown' }}</strong></p>
+      <div *ngIf="review.comments && review.comments.length > 0" class="mt-3">
+        <h4>Commenti</h4>
+        <div *ngFor="let comment of review.comments" class="comment mb-2">
+          <p><strong>{{ comment.user.username }}</strong>: {{ comment.body }}</p>
+          <p class="small text-muted">
+            <span *ngIf="comment.updatedAt; else created">Modificato il: {{ comment.updatedAt | date: 'short' }}</span>
+            <ng-template #created>Creato il: {{ comment.createdAt | date: 'short' }}</ng-template>
+          </p>
+          <div *ngIf="comment.replies && comment.replies.length > 0" class="mt-2">
+            <h5>Risposte</h5>
+            <div *ngFor="let reply of comment.replies" class="reply ms-3">
+              <p><strong>{{ reply.user.username }}</strong>: {{ reply.body }}</p>
+              <p class="small text-muted">
+                <span *ngIf="reply.updatedAt; else replyCreated">Modificato il: {{ reply.updatedAt | date: 'short' }}</span>
+                <ng-template #replyCreated>Creato il: {{ reply.createdAt | date: 'short' }}</ng-template>
+              </p>
+              <!-- Ricorsione per visualizzare ulteriori risposte -->
+              <div *ngIf="reply.replies && reply.replies.length > 0" class="mt-2">
+                <h6>Ulteriori risposte</h6>
+                <div *ngFor="let subReply of reply.replies" class="reply ms-3">
+                  <p><strong>{{ subReply.user.username }}</strong>: {{ subReply.body }}</p>
+                  <p class="small text-muted">
+                    <span *ngIf="subReply.updatedAt; else subReplyCreated">Modificato il: {{ subReply.updatedAt | date: 'short' }}</span>
+                    <ng-template #subReplyCreated>Creato il: {{ subReply.createdAt | date: 'short' }}</ng-template>
+                  </p>
+                  <!-- Puoi continuare a nidificare ulteriori risposte se necessario -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
