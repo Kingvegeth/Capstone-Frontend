@@ -1,33 +1,56 @@
-<div class="container">
-  <div *ngIf="movie" class="movie-details-container text-white">
-    <h1 class="text-center">{{ movie.title }}</h1>
-    <div class="row">
-      <div class="col-md-6">
-        <img
-        [src]="movie.posterImg || 'assets/img/default/default-movie.png'"
-        (error)="onImageError($event)"
-        class="img-fluid"
-        alt="{{ movie.title }} Poster">
-      </div>
-      <div class="col-md-6">
-        <p><strong>Anno:</strong> {{ movie.year }}</p>
-        <p><strong>Durata:</strong> {{ movie.duration }} minuti</p>
-        <p><strong>Generi:</strong> {{ getGenres() }}</p>
-        <p><strong>Descrizione:</strong> {{ movie.description }}</p>
-        <p><strong>Valutazione Media:</strong>
-          {{ getAverageRating() }}
-          <!-- <span *ngFor="let star of getStarRating(movie.averageRating)">
-            &#9733;
-          </span> -->
+<div *ngIf="movie" class="container mt-5">
+  <h1>{{ movie.title }}</h1>
+  <img [src]="movie.posterImg || 'assets/img/default/default-movie.png'" (error)="onImageError($event)" class="img-thumbnail mt-2" alt="Poster">
+  <p><strong>Anno:</strong> {{ movie.year }}</p>
+  <p><strong>Durata:</strong> {{ movie.duration }} minuti</p>
+  <p><strong>Generi:</strong> {{ getGenres() }}</p>
+  <p><strong>Descrizione:</strong> {{ movie.description }}</p>
+  <p><strong>Valutazione Media:</strong> {{ getAverageRating() }}</p>
 
-        </p>
-        <p><strong>Cast:</strong> {{ getCast() }}</p>
-        <p><strong>Regia:</strong> {{ getDirectors() }}</p>
-        <p><strong>Sceneggiatura:</strong> {{ getScreenwriters() }}</p>
-        <p><strong>Casa di produzione:</strong> {{ getProducers() }}</p>
-        <p><strong>Distribuito da:</strong> {{ movie.distributor?.name || 'N/A' }}</p>
-        <p><strong>Recensioni:</strong> {{ getReviews() }}</p>
-      </div>
+  <h3>Cast</h3>
+  <p>{{ getCast() }}</p>
+
+  <h3>Registi</h3>
+  <p>{{ getDirectors() }}</p>
+
+  <h3>Sceneggiatori</h3>
+  <p>{{ getScreenwriters() }}</p>
+
+  <h3>Produttori</h3>
+  <p>{{ getProducers() }}</p>
+
+  <h3>Distribuito da</h3>
+  <p>{{ movie.distributor?.name }}</p>
+
+  <h2>Recensioni</h2>
+  <div *ngFor="let review of movie.reviews ?? []" class="review card mb-3">
+    <div class="card-body">
+      <h3 class="card-title">{{ review.title }}</h3>
+      <p class="card-text">{{ review.body }}</p>
+      <p class="card-text"><strong>Valutazione:</strong> {{ review.rating }} / 10</p>
+      <p class="card-text"><strong>Data di creazione:</strong> {{ review.createdAt | date: 'short' }}</p>
+      <p class="card-text text-end">Scritta da: <strong>{{ review.user?.username ?? 'Unknown' }}</strong></p>
     </div>
+  </div>
+
+  <div *ngIf="!hasReviewed" class="mt-4">
+    <h3>Aggiungi una recensione</h3>
+    <form (ngSubmit)="addReview()">
+      <div class="form-group">
+        <label for="reviewTitle">Titolo</label>
+        <input type="text" id="reviewTitle" [(ngModel)]="newReview.title" name="title" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="reviewBody">Testo</label>
+        <textarea id="reviewBody" [(ngModel)]="newReview.body" name="body" class="form-control" rows="4" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="reviewRating">Valutazione</label>
+        <select id="reviewRating" [(ngModel)]="newReview.rating" name="rating" class="form-control" required>
+          <option *ngFor="let rating of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" [value]="rating">{{ rating }}</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary mt-3">Invia Recensione</button>
+    </form>
   </div>
 </div>

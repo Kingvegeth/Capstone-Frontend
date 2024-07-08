@@ -16,7 +16,11 @@ export class ReviewService {
     return this.http.get<iReview[]>(`${this.reviewsUrl}/movie/${movieId}`);
   }
 
-  createReview(review: iReview): Observable<iReview> {
+  getReviewById(reviewId: number): Observable<iReview> {
+    return this.http.get<iReview>(`${this.reviewsUrl}/${reviewId}`);
+  }
+
+  createReview(review: Partial<iReview>): Observable<iReview> {
     return this.http.post<iReview>(this.reviewsUrl, review);
   }
 

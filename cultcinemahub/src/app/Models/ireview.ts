@@ -4,14 +4,15 @@ import { iUser } from "./iuser";
 
 
 export interface iReview {
-  id: number;
+  id?: number;
   title: string;
   body: string;
   rating: number;
-  user: iUser;
-  userStatus: string;
+  userId?: number;
+  movieId?: number;
+  user?: iUser;
+  userStatus?: string;
   createdAt: string;
   updatedAt?: string;
-  movie: iMovie;
   comments?: iComment[];
 }
