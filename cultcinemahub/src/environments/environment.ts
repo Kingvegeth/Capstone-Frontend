@@ -5,5 +5,6 @@ export const environment = {
   moviesUrl: 'http://localhost:8080/api/movies',
   personsUrl: 'http://localhost:8080/api/people',
   companiesUrl: 'http://localhost:8080/api/companies',
-  reviewsUrl: 'http://localhost:8080/api/reviews'
+  reviewsUrl: 'http://localhost:8080/api/reviews',
+  commentsUrl: 'http://localhost:8080/api/comments'
 };

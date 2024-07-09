@@ -10,7 +10,7 @@ export interface iComment {
   userStatus: string;
   replies?: iComment[];
   reviewId?: number;
-  parentId?: number;
+  parentId?: number | null;
   createdAt: string;
   updatedAt?: string;
 }

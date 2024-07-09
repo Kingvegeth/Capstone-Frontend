@@ -46,7 +46,6 @@
                 <span *ngIf="reply.updatedAt; else replyCreated">Modificato il: {{ reply.updatedAt | date: 'short' }}</span>
                 <ng-template #replyCreated>Creato il: {{ reply.createdAt | date: 'short' }}</ng-template>
               </p>
-              <!-- Ricorsione per visualizzare ulteriori risposte -->
               <div *ngIf="reply.replies && reply.replies.length > 0" class="mt-2">
                 <h6>Ulteriori risposte</h6>
                 <div *ngFor="let subReply of reply.replies" class="reply ms-3">
@@ -55,12 +54,20 @@
                     <span *ngIf="subReply.updatedAt; else subReplyCreated">Modificato il: {{ subReply.updatedAt | date: 'short' }}</span>
                     <ng-template #subReplyCreated>Creato il: {{ subReply.createdAt | date: 'short' }}</ng-template>
                   </p>
-                  <!-- Puoi continuare a nidificare ulteriori risposte se necessario -->
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+      <div class="mt-4">
+        <h4>Aggiungi un commento</h4>
+        <form (ngSubmit)="addComment(review.id!)">
+          <div class="form-group">
+            <textarea [(ngModel)]="newComment.body" name="body" class="form-control" rows="2" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary mt-2">Invia Commento</button>
+        </form>
       </div>
     </div>
   </div>

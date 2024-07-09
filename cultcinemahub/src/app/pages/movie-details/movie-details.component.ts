@@ -7,6 +7,8 @@ import { AuthService } from '../../auth/auth.service';
 import { iReview } from '../../models/ireview';
 import { iUser } from '../../models/iuser';
 import { UsersService } from '../../users.service';
+import { iComment } from '../../models/icomment';
+import { CommentService } from '../../services/comment.service';
 
 @Component({
   selector: 'app-movie-details',
@@ -16,6 +18,7 @@ import { UsersService } from '../../users.service';
 export class MovieDetailsComponent {
   movie: iMovie | undefined;
   newReview: Partial<iReview> = {};
+  newComment: Partial<iComment> = {};
   hasReviewed: boolean = false;
   currentUser: iUser | undefined;
 
@@ -23,6 +26,7 @@ export class MovieDetailsComponent {
     private route: ActivatedRoute,
     private movieSvc: MovieService,
     private reviewSvc: ReviewService,
+    private commentSvc: CommentService,
     private userSvc: UsersService
   ) {}
 
@@ -74,12 +78,12 @@ export class MovieDetailsComponent {
       title: this.newReview.title ?? '',
       body: this.newReview.body ?? '',
       rating: this.newReview.rating ?? 0,
-      userId: this.currentUser.id,  // Passa solo l'ID dell'utente
-      movieId: this.movie.id,  // Passa solo l'ID del film
+      userId: this.currentUser.id,
+      movieId: this.movie.id,
       createdAt: new Date().toISOString()
     };
 
-    // Aggiungi il log qui per visualizzare i dati della recensione
+
     console.log('Review data to be sent:', review);
 
     this.reviewSvc.createReview(review).subscribe(
@@ -97,6 +101,62 @@ export class MovieDetailsComponent {
         console.error('Error creating review:', error);
       }
     );
+  }
+
+  addComment(reviewId: number, parentId: number | null = null): void {
+    if (!this.newComment.body || !this.currentUser) {
+      console.error('Please fill all fields');
+      return;
+    }
+
+    const comment: Partial<iComment> = {
+      body: this.newComment.body ?? '',
+      user: this.currentUser,
+      reviewId: reviewId,
+      parentId: parentId,
+      createdAt: new Date().toISOString()
+    };
+
+    this.commentSvc.addComment(comment).subscribe(
+      (createdComment) => {
+        const review = this.movie?.reviews?.find(r => r.id === reviewId);
+        if (review) {
+          if (parentId) {
+            const parentComment = this.findCommentById(review.comments!, parentId);
+            if (parentComment?.replies) {
+              parentComment.replies.push(createdComment);
+            } else {
+              parentComment!.replies = [createdComment];
+            }
+          } else {
+            if (review.comments) {
+              review.comments.push(createdComment);
+            } else {
+              review.comments = [createdComment];
+            }
+          }
+        }
+        this.newComment = {};
+      },
+      (error) => {
+        console.error('Error creating comment:', error);
+      }
+    );
+  }
+
+  findCommentById(comments: iComment[], commentId: number): iComment | undefined {
+    for (const comment of comments) {
+      if (comment.id === commentId) {
+        return comment;
+      }
+      if (comment.replies) {
+        const found = this.findCommentById(comment.replies, commentId);
+        if (found) {
+          return found;
+        }
+      }
+    }
+    return undefined;
   }
 
 onImageError(event: Event) {
