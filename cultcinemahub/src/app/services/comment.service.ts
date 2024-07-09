@@ -15,4 +15,8 @@ export class CommentService {
   addComment(comment: Partial<iComment>): Observable<iComment> {
     return this.http.post<iComment>(this.commentsUrl, comment);
   }
+
+  updateComment(comment: Partial<iComment>): Observable<iComment> {
+    return this.http.put<iComment>(`${this.commentsUrl}/${comment.id}`, comment);
+  }
 }

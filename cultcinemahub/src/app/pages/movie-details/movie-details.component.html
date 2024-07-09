@@ -38,6 +38,8 @@
             <span *ngIf="comment.updatedAt; else created">Modificato il: {{ comment.updatedAt | date: 'short' }}</span>
             <ng-template #created>Creato il: {{ comment.createdAt | date: 'short' }}</ng-template>
           </p>
+          <button *ngIf="comment.user.id === currentUser?.id" (click)="editComment(comment)" class="btn btn-link btn-sm">Modifica</button>
+          <button (click)="setReplyToComment(comment)" class="btn btn-link btn-sm">Rispondi</button>
           <div *ngIf="comment.replies && comment.replies.length > 0" class="mt-2">
             <h5>Risposte</h5>
             <div *ngFor="let reply of comment.replies" class="reply ms-3">
@@ -46,6 +48,8 @@
                 <span *ngIf="reply.updatedAt; else replyCreated">Modificato il: {{ reply.updatedAt | date: 'short' }}</span>
                 <ng-template #replyCreated>Creato il: {{ reply.createdAt | date: 'short' }}</ng-template>
               </p>
+              <button *ngIf="reply.user.id === currentUser?.id" (click)="editComment(reply)" class="btn btn-link btn-sm">Modifica</button>
+              <button (click)="setReplyToComment(reply)" class="btn btn-link btn-sm">Rispondi</button>
               <div *ngIf="reply.replies && reply.replies.length > 0" class="mt-2">
                 <h6>Ulteriori risposte</h6>
                 <div *ngFor="let subReply of reply.replies" class="reply ms-3">
@@ -54,6 +58,8 @@
                     <span *ngIf="subReply.updatedAt; else subReplyCreated">Modificato il: {{ subReply.updatedAt | date: 'short' }}</span>
                     <ng-template #subReplyCreated>Creato il: {{ subReply.createdAt | date: 'short' }}</ng-template>
                   </p>
+                  <button *ngIf="subReply.user.id === currentUser?.id" (click)="editComment(subReply)" class="btn btn-link btn-sm">Modifica</button>
+                  <button (click)="setReplyToComment(subReply)" class="btn btn-link btn-sm">Rispondi</button>
                 </div>
               </div>
             </div>
@@ -66,7 +72,25 @@
           <div class="form-group">
             <textarea [(ngModel)]="newComment.body" name="body" class="form-control" rows="2" required></textarea>
           </div>
-          <button type="submit" class="btn btn-primary mt-2">Invia Commento</button>
+          <button type="submit" class="btn btn-primary mt-2">Invia</button>
+        </form>
+      </div>
+      <div *ngIf="replyToComment" class="mt-4">
+        <h4>Rispondi al commento</h4>
+        <form (ngSubmit)="addReply(replyToComment)">
+          <div class="form-group">
+            <textarea [(ngModel)]="newComment.body" name="body" class="form-control" rows="2" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary mt-2">Invia Risposta</button>
+        </form>
+      </div>
+      <div *ngIf="editingComment" class="mt-4">
+        <h4>Modifica Commento</h4>
+        <form (ngSubmit)="updateComment(editingComment)">
+          <div class="form-group">
+            <textarea [(ngModel)]="editingComment.body" name="body" class="form-control" rows="2" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary mt-2">Salva Modifiche</button>
         </form>
       </div>
     </div>

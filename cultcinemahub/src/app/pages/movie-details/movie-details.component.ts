@@ -21,6 +21,8 @@ export class MovieDetailsComponent {
   newComment: Partial<iComment> = {};
   hasReviewed: boolean = false;
   currentUser: iUser | undefined;
+  replyToComment: iComment | undefined;
+  editingComment: iComment | undefined;
 
   constructor(
     private route: ActivatedRoute,
@@ -103,7 +105,7 @@ export class MovieDetailsComponent {
     );
   }
 
-  addComment(reviewId: number, parentId: number | null = null): void {
+  addComment(reviewId: number, parentId?: number): void {
     if (!this.newComment.body || !this.currentUser) {
       console.error('Please fill all fields');
       return;
@@ -111,9 +113,9 @@ export class MovieDetailsComponent {
 
     const comment: Partial<iComment> = {
       body: this.newComment.body ?? '',
-      user: this.currentUser,
+      userId: this.currentUser.id!,
       reviewId: reviewId,
-      parentId: parentId,
+      parentId: parentId ?? undefined,
       createdAt: new Date().toISOString()
     };
 
@@ -137,6 +139,7 @@ export class MovieDetailsComponent {
           }
         }
         this.newComment = {};
+        this.replyToComment = undefined;
       },
       (error) => {
         console.error('Error creating comment:', error);
@@ -144,20 +147,57 @@ export class MovieDetailsComponent {
     );
   }
 
-  findCommentById(comments: iComment[], commentId: number): iComment | undefined {
-    for (const comment of comments) {
-      if (comment.id === commentId) {
-        return comment;
-      }
-      if (comment.replies) {
-        const found = this.findCommentById(comment.replies, commentId);
-        if (found) {
-          return found;
+  addReply(comment: iComment): void {
+    this.addComment(comment.reviewId!, comment.id);
+  }
+
+  setReplyToComment(comment: iComment): void {
+    this.replyToComment = comment;
+    this.newComment.body = '';
+  }
+
+  editComment(comment: iComment): void {
+    this.editingComment = { ...comment }; // Crea una copia dell'oggetto commento
+  }
+
+  updateComment(comment: iComment): void {
+    if (!comment.body || !this.currentUser) {
+      console.error('Please fill all fields');
+      return;
+    }
+
+    this.commentSvc.updateComment(comment).subscribe(
+      (updatedComment) => {
+        const review = this.movie?.reviews?.find(r => r.id === updatedComment.reviewId);
+        if (review) {
+          const originalComment = this.findCommentById(review.comments!, updatedComment.id);
+          if (originalComment) {
+            originalComment.body = updatedComment.body;
+            originalComment.updatedAt = updatedComment.updatedAt;
+          }
         }
+        this.editingComment = undefined;
+      },
+      (error) => {
+        console.error('Error updating comment:', error);
       }
+    );
+  }
+
+  findCommentById(comments: iComment[], id: number): iComment | undefined {
+    for (let comment of comments) {
+        if (comment.id === id) {
+            return comment;
+        }
+        if (comment.replies && comment.replies.length > 0) {
+            const found = this.findCommentById(comment.replies, id);
+            if (found) {
+                return found;
+            }
+        }
     }
     return undefined;
-  }
+}
 
 onImageError(event: Event) {
     (event.target as HTMLImageElement).src = 'assets/img/default/default-movie.png';

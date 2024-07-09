@@ -11,6 +11,7 @@ export interface iComment {
   replies?: iComment[];
   reviewId?: number;
   parentId?: number | null;
+  userId?: number;
   createdAt: string;
   updatedAt?: string;
 }
