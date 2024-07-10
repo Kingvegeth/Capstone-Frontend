@@ -25,3 +25,42 @@
 .text-end {
   text-align: right;
 }
+
+.comments-section {
+  margin-top: 20px;
+}
+
+.comment-container {
+  border: 1px solid #444;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #383838;
+  margin-bottom: 10px;
+}
+
+.reply-container {
+  border: 1px solid #555;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #3a3a3a;
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+
+.sub-reply-container {
+  border: 1px solid #666;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #9b1818;
+  margin-left: 40px;
+  margin-bottom: 10px;
+}
+
+button.btn-link {
+  color: #1e90ff;
+  text-decoration: none;
+}
+
+button.btn-link:hover {
+  text-decoration: underline;
+}

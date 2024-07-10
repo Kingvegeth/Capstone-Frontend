@@ -15,4 +15,5 @@ export interface iReview {
   createdAt: string;
   updatedAt?: string;
   comments?: iComment[];
+  commentIds?: number[];
 }

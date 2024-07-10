@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -24,6 +24,15 @@ import { CompaniesComponent } from './pages/companies/companies.component';
 import { AddCompanyModalComponent } from './shared/add-company-modal/add-company-modal.component';
 import { EditCompanyModalComponent } from './shared/edit-company-modal/edit-company-modal.component';
 import { MovieDetailsComponent } from './pages/movie-details/movie-details.component';
+import { MomentModule, NGX_MOMENT_OPTIONS } from 'ngx-moment';
+import moment from 'moment';
+import 'moment/locale/it';
+import { registerLocaleData } from '@angular/common';
+import localeIt from '@angular/common/locales/it';
+
+registerLocaleData(localeIt);
+moment.locale('it');
+
 
 @NgModule({
   declarations: [
@@ -49,7 +58,8 @@ import { MovieDetailsComponent } from './pages/movie-details/movie-details.compo
     AppRoutingModule,
     NgbModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    MomentModule
   ],
   providers: [
     AuthService,
@@ -58,6 +68,10 @@ import { MovieDetailsComponent } from './pages/movie-details/movie-details.compo
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
+    },
+    {
+      provide: LOCALE_ID,
+      useValue: 'it'
     }
   ],
   bootstrap: [AppComponent]

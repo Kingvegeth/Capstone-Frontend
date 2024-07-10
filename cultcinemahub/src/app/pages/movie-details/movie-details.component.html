@@ -28,70 +28,16 @@
       <h3 class="card-title">{{ review.title }}</h3>
       <p class="card-text">{{ review.body }}</p>
       <p class="card-text"><strong>Valutazione:</strong> {{ review.rating }} / 10</p>
-      <p class="card-text"><strong>Data di creazione:</strong> {{ review.createdAt | date: 'short' }}</p>
+      <p class="card-text"><strong>Data di creazione:</strong>
+        <span [ngbTooltip]="review.createdAt | date: 'dd/MM/yyyy, HH:mm'">{{ review.createdAt | amTimeAgo }}</span>
+      </p>
       <p class="card-text text-end">Scritta da: <strong>{{ review.user?.username ?? 'Unknown' }}</strong></p>
-      <div *ngIf="review.comments && review.comments.length > 0" class="mt-3">
+
+      <div *ngIf="review.comments && review.comments.length > 0" class="comments-section">
         <h4>Commenti</h4>
-        <div *ngFor="let comment of review.comments" class="comment mb-2">
-          <p><strong>{{ comment.user.username }}</strong>: {{ comment.body }}</p>
-          <p class="small text-muted">
-            <span *ngIf="comment.updatedAt; else created">Modificato il: {{ comment.updatedAt | date: 'short' }}</span>
-            <ng-template #created>Creato il: {{ comment.createdAt | date: 'short' }}</ng-template>
-          </p>
-          <button *ngIf="comment.user.id === currentUser?.id" (click)="editComment(comment)" class="btn btn-link btn-sm">Modifica</button>
-          <button (click)="setReplyToComment(comment)" class="btn btn-link btn-sm">Rispondi</button>
-          <div *ngIf="comment.replies && comment.replies.length > 0" class="mt-2">
-            <h5>Risposte</h5>
-            <div *ngFor="let reply of comment.replies" class="reply ms-3">
-              <p><strong>{{ reply.user.username }}</strong>: {{ reply.body }}</p>
-              <p class="small text-muted">
-                <span *ngIf="reply.updatedAt; else replyCreated">Modificato il: {{ reply.updatedAt | date: 'short' }}</span>
-                <ng-template #replyCreated>Creato il: {{ reply.createdAt | date: 'short' }}</ng-template>
-              </p>
-              <button *ngIf="reply.user.id === currentUser?.id" (click)="editComment(reply)" class="btn btn-link btn-sm">Modifica</button>
-              <button (click)="setReplyToComment(reply)" class="btn btn-link btn-sm">Rispondi</button>
-              <div *ngIf="reply.replies && reply.replies.length > 0" class="mt-2">
-                <h6>Ulteriori risposte</h6>
-                <div *ngFor="let subReply of reply.replies" class="reply ms-3">
-                  <p><strong>{{ subReply.user.username }}</strong>: {{ subReply.body }}</p>
-                  <p class="small text-muted">
-                    <span *ngIf="subReply.updatedAt; else subReplyCreated">Modificato il: {{ subReply.updatedAt | date: 'short' }}</span>
-                    <ng-template #subReplyCreated>Creato il: {{ subReply.createdAt | date: 'short' }}</ng-template>
-                  </p>
-                  <button *ngIf="subReply.user.id === currentUser?.id" (click)="editComment(subReply)" class="btn btn-link btn-sm">Modifica</button>
-                  <button (click)="setReplyToComment(subReply)" class="btn btn-link btn-sm">Rispondi</button>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div *ngFor="let comment of review.comments" class="comment-container">
+          <ng-container *ngTemplateOutlet="renderComment; context: { $implicit: comment }"></ng-container>
         </div>
-      </div>
-      <div class="mt-4">
-        <h4>Aggiungi un commento</h4>
-        <form (ngSubmit)="addComment(review.id!)">
-          <div class="form-group">
-            <textarea [(ngModel)]="newComment.body" name="body" class="form-control" rows="2" required></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary mt-2">Invia</button>
-        </form>
-      </div>
-      <div *ngIf="replyToComment" class="mt-4">
-        <h4>Rispondi al commento</h4>
-        <form (ngSubmit)="addReply(replyToComment)">
-          <div class="form-group">
-            <textarea [(ngModel)]="newComment.body" name="body" class="form-control" rows="2" required></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary mt-2">Invia Risposta</button>
-        </form>
-      </div>
-      <div *ngIf="editingComment" class="mt-4">
-        <h4>Modifica Commento</h4>
-        <form (ngSubmit)="updateComment(editingComment)">
-          <div class="form-group">
-            <textarea [(ngModel)]="editingComment.body" name="body" class="form-control" rows="2" required></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary mt-2">Salva Modifiche</button>
-        </form>
       </div>
     </div>
   </div>
@@ -116,4 +62,38 @@
       <button type="submit" class="btn btn-primary mt-3">Invia Recensione</button>
     </form>
   </div>
+
+  <ng-template #renderComment let-comment>
+    <div class="comment-container">
+      <p><strong>{{ comment.user.username }}</strong>: {{ comment.body }}</p>
+      <p class="small text-muted">
+        <span *ngIf="comment.updatedAt; else created" class="text-warning" [ngbTooltip]="comment.updatedAt | date: 'dd/MM/yyyy, HH:mm'">Modificato il: {{ comment.updatedAt | amTimeAgo }}</span>
+        <ng-template #created><span class="text-white" [ngbTooltip]="comment.createdAt | date: 'dd/MM/yyyy, HH:mm'">Creato il: {{ comment.createdAt | amTimeAgo }}</span></ng-template>
+      </p>
+      <div>
+        <button class="btn btn-link" (click)="logCommentDetails(comment)">Dettagli</button>
+        <div *ngIf="comment.user.id === currentUser?.id">
+          <button class="btn btn-link" (click)="editComment(comment)">Modifica</button>
+          <button class="btn btn-link" (click)="deleteComment(comment.id, comment.reviewId)">Elimina</button>
+        </div>
+        <div *ngIf="comment.user.id !== currentUser?.id">
+          <button class="btn btn-link" (click)="setReplyToComment(comment)">Rispondi</button>
+        </div>
+      </div>
+      <div *ngIf="replyToComment && replyToComment.id === comment.id">
+        <form (ngSubmit)="addReply(comment)">
+          <div class="form-group">
+            <label for="replyBody">Rispondi</label>
+            <textarea id="replyBody" [(ngModel)]="newComment.body" name="body" class="form-control" rows="4" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary mt-3">Invia Risposta</button>
+        </form>
+      </div>
+      <div class="replies" *ngIf="comment.replies && comment.replies.length > 0">
+        <div *ngFor="let reply of comment.replies" class="reply-container">
+          <ng-container *ngTemplateOutlet="renderComment; context: { $implicit: reply }"></ng-container>
+        </div>
+      </div>
+    </div>
+  </ng-template>
 </div>
