@@ -1,5 +1,5 @@
 import { ReviewService } from './../../services/review.service';
-import { Component } from '@angular/core';
+import { Component, Renderer2 } from '@angular/core';
 import { iMovie } from '../../models/imovie';
 import { ActivatedRoute } from '@angular/router';
 import { MovieService } from '../../services/movie.service';
@@ -14,6 +14,8 @@ import { EditReviewModalComponent } from '../../shared/modals/edit-review-modal/
 import { AddCommentModalComponent } from '../../shared/modals/add-comment-modal/add-comment-modal.component';
 import { EditCommentModalComponent } from '../../shared/modals/edit-comment-modal/edit-comment-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FastAverageColor } from 'fast-average-color';
+
 
 @Component({
   selector: 'app-movie-details',
@@ -24,6 +26,7 @@ export class MovieDetailsComponent {
   movie: iMovie | undefined;
   currentUser!: iUser; // Ensure currentUser is not undefined
   newComments: { [reviewId: number]: Partial<iComment> } = {};
+  private fac: FastAverageColor;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,8 +34,11 @@ export class MovieDetailsComponent {
     private reviewSvc: ReviewService,
     private commentSvc: CommentService,
     private userSvc: UsersService,
-    private modalService: NgbModal
-  ) {}
+    private modalService: NgbModal,
+    private renderer: Renderer2
+  ) {
+    this.fac = new FastAverageColor();
+  }
 
   ngOnInit(): void {
     this.getMovieDetails();
@@ -45,6 +51,7 @@ export class MovieDetailsComponent {
     const id = +this.route.snapshot.paramMap.get('id')!;
     this.movieSvc.getMovieById(id).subscribe((movie: iMovie) => {
       this.movie = movie;
+      this.setBackgroundColor(movie.posterImg);
       this.movie.reviews?.forEach(review => {
         this.newComments[review.id!] = {}; // Initialize newComments for each review
         this.reviewSvc.getReviewById(review.id!).subscribe(detailedReview => {
@@ -56,6 +63,23 @@ export class MovieDetailsComponent {
         });
       });
     });
+  }
+
+  setBackgroundColor(imageUrl?: string): void {
+    if (!imageUrl) {
+      return;
+    }
+
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.src = imageUrl;
+    img.onload = () => {
+      const color = this.fac.getColor(img);
+      const movieDetailsWrapper = document.getElementById('movie-details-wrapper');
+      if (movieDetailsWrapper) {
+        this.renderer.setStyle(movieDetailsWrapper, 'background', `linear-gradient(to bottom, rgba(0, 0, 0, 0.7), ${color.hex})`);
+      }
+    };
   }
 
   loadCommentsForReview(review: iReview): void {

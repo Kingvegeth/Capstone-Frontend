@@ -1,53 +1,57 @@
 <div *ngIf="movie" class="container mt-5">
-  <h1>{{ movie.title }}</h1>
-  <img [src]="movie.posterImg || 'assets/img/default/default-movie.png'" (error)="onImageError($event)" class="img-thumbnail mt-2" alt="Poster">
-  <p><strong>Anno:</strong> {{ movie.year }}</p>
-  <p><strong>Durata:</strong> {{ movie.duration }} minuti</p>
-  <p><strong>Generi:</strong> {{ getGenres() }}</p>
-  <p><strong>Descrizione:</strong> {{ movie.description }}</p>
-  <p><strong>Valutazione Media:</strong> {{ getAverageRating() }}</p>
+  <div class="movie-details-wrapper" id="movie-details-wrapper">
+    <div class="overlay"></div>
+    <div class="movie-details-content">
+      <h1>{{ movie.title }}</h1>
+      <img [src]="movie.posterImg || 'assets/img/default/default-movie.png'" (error)="onImageError($event)" class="img-thumbnail mt-2" alt="Poster">
+      <p><strong>Anno:</strong> {{ movie.year }}</p>
+      <p><strong>Durata:</strong> {{ movie.duration }} minuti</p>
+      <p><strong>Generi:</strong> {{ getGenres() }}</p>
+      <p><strong>Descrizione:</strong> {{ movie.description }}</p>
+      <p><strong>Valutazione Media:</strong> {{ getAverageRating() }}</p>
+      <p *ngIf="movie.cast && movie.cast.length"><strong>Cast:</strong> {{ getCast() }}</p>
+      <p *ngIf="movie.directors && movie.directors.length"><strong>Registi:</strong> {{ getDirectors() }}</p>
+      <p *ngIf="movie.screenwriters && movie.screenwriters.length"><strong>Sceneggiatori:</strong> {{ getScreenwriters() }}</p>
+      <p *ngIf="movie.producers && movie.producers.length"><strong>Produttori:</strong> {{ getProducers() }}</p>
+      <p *ngIf="movie.distributor"><strong>Distributore:</strong> {{ movie.distributor.name }}</p>
 
-  <p *ngIf="movie.cast && movie.cast.length"><strong>Cast:</strong> {{ getCast() }}</p>
-  <p *ngIf="movie.directors && movie.directors.length"><strong>Registi:</strong> {{ getDirectors() }}</p>
-  <p *ngIf="movie.screenwriters && movie.screenwriters.length"><strong>Sceneggiatori:</strong> {{ getScreenwriters() }}</p>
-  <p *ngIf="movie.producers && movie.producers.length"><strong>Produttori:</strong> {{ getProducers() }}</p>
-  <p *ngIf="movie.distributor"><strong>Distributore:</strong> {{ movie.distributor.name }}</p>
+      <h3>Recensioni</h3>
+      <div *ngFor="let review of movie.reviews ?? []" class="review card mb-3">
+        <div class="card-body">
+          <h3 class="card-title">{{ review.title }}</h3>
+          <p class="card-text">{{ review.body }}</p>
+          <p class="card-text"><strong>Valutazione:</strong> {{ review.rating }} / 10</p>
+          <p class="card-text">
+            <span *ngIf="review.updatedAt; else created" class="text-warning" [ngbTooltip]="review.updatedAt | date: 'dd/MM/yyyy, HH:mm'">
+              Modificato {{ review.updatedAt | amTimeAgo }}
+            </span>
+            <ng-template #created>
+              <span class="text-white" [ngbTooltip]="review.createdAt | date: 'dd/MM/yyyy, HH:mm'">
+                Creato {{ review.createdAt | amTimeAgo }}
+              </span>
+            </ng-template>
+          </p>
+          <p class="card-text text-end">Scritta da: <strong>{{ review.user?.username ?? 'Unknown' }}</strong></p>
 
-  <h3>Recensioni</h3>
-  <div *ngFor="let review of movie.reviews ?? []" class="review card mb-3">
-    <div class="card-body">
-      <h3 class="card-title">{{ review.title }}</h3>
-      <p class="card-text">{{ review.body }}</p>
-      <p class="card-text"><strong>Valutazione:</strong> {{ review.rating }} / 10</p>
-      <p class="card-text">
-        <span *ngIf="review.updatedAt; else created" class="text-warning" [ngbTooltip]="review.updatedAt | date: 'dd/MM/yyyy, HH:mm'">
-          Modificato {{ review.updatedAt | amTimeAgo }}
-        </span>
-        <ng-template #created>
-          <span class="text-white" [ngbTooltip]="review.createdAt | date: 'dd/MM/yyyy, HH:mm'">
-            Creato {{ review.createdAt | amTimeAgo }}
-          </span>
-        </ng-template>
-      </p>
-      <p class="card-text text-end">Scritta da: <strong>{{ review.user?.username ?? 'Unknown' }}</strong></p>
+          <div *ngIf="currentUser && review.user?.id === currentUser.id">
+            <button class="btn btn-secondary mt-3" (click)="openEditReviewModal(review)">Modifica Recensione</button>
+          </div>
 
-      <div *ngIf="currentUser && review.user?.id === currentUser.id">
-        <button class="btn btn-secondary mt-3" (click)="openEditReviewModal(review)">Modifica Recensione</button>
-      </div>
+          <div *ngIf="review.comments && review.comments.length > 0" class="comments-section">
+            <h4>Commenti</h4>
+            <div *ngFor="let comment of review.comments" class="comment-container">
+              <app-comment [comment]="comment"
+                           [currentUser]="currentUser"
+                           (reply)="openAddCommentModal(undefined, $event)"
+                           (editComment)="onEditComment($event)"
+                           (deleteComment)="onDeleteComment($event)"></app-comment>
+            </div>
+          </div>
 
-      <div *ngIf="review.comments && review.comments.length > 0" class="comments-section">
-        <h4>Commenti</h4>
-        <div *ngFor="let comment of review.comments" class="comment-container">
-          <app-comment [comment]="comment"
-                       [currentUser]="currentUser"
-                       (reply)="openAddCommentModal(undefined, $event)"
-                       (editComment)="onEditComment($event)"
-                       (deleteComment)="onDeleteComment($event)"></app-comment>
+          <div class="mt-3">
+            <button class="btn btn-primary" (click)="openAddCommentModal(review.id)">Aggiungi Commento</button>
+          </div>
         </div>
-      </div>
-
-      <div class="mt-3">
-        <button class="btn btn-primary" (click)="openAddCommentModal(review.id)">Aggiungi Commento</button>
       </div>
     </div>
   </div>

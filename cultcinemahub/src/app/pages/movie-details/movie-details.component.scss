@@ -1,6 +1,8 @@
 .container {
   background-color: #2c2c2c;
   color: #fff;
+  padding-inline: 0;
+  border-radius: 10px;
 }
 
 .review {
@@ -63,4 +65,11 @@ button.btn-link {
 
 button.btn-link:hover {
   text-decoration: underline;
+}
+
+.movie-details-wrapper {
+  padding: 20px;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+
 }

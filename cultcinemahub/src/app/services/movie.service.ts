@@ -16,12 +16,15 @@ export class MovieService {
 
   constructor(private http: HttpClient) { }
 
-  getAllMovies(): Observable<iMovie[]> {
-    return this.http.get<iMovie[]>(this.moviesUrl).pipe(
-      map(movies => movies.map(movie => ({
-        ...movie,
-        genresText: movie.genres.map(g => g).join(', ')
-      })))
+  getAllMovies(page: number, size: number): Observable<{ content: iMovie[], totalPages: number }> {
+    return this.http.get<{ content: iMovie[], totalPages: number }>(`${this.moviesUrl}?page=${page}&size=${size}`).pipe(
+      map(response => ({
+        ...response,
+        content: response.content.map(movie => ({
+          ...movie,
+          genresText: movie.genres.map(g => g).join(', ')
+        }))
+      }))
     );
   }
 

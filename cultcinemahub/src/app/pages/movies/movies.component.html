@@ -24,4 +24,22 @@
       </div>
     </div>
   </div>
+
+  <nav *ngIf="totalPages > 1">
+    <ul class="pagination justify-content-center mt-4">
+      <li class="page-item" [class.disabled]="currentPage === 0">
+        <a class="page-link" (click)="onPageChange(currentPage - 1)" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li *ngFor="let page of [].constructor(totalPages); let i = index" class="page-item" [class.active]="i === currentPage">
+        <a class="page-link" (click)="onPageChange(i)">{{ i + 1 }}</a>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+        <a class="page-link" (click)="onPageChange(currentPage + 1)" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
 </div>

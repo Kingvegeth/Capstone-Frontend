@@ -16,6 +16,9 @@ import { EditMovieModalComponent } from '../../shared/modals/edit-movie-modal/ed
 export class MoviesComponent {
   movies: iMovie[] = [];
   isAdmin$!: Observable<boolean>;
+  totalPages: number = 0;
+  currentPage: number = 0;
+  pageSize: number = 3;
 
   constructor(
     private movieSvc: MovieService,
@@ -25,11 +28,16 @@ export class MoviesComponent {
   ) { }
 
   ngOnInit(): void {
-    this.movieSvc.getAllMovies().subscribe((data: iMovie[]) => {
-      this.movies = data;
-    });
-
+    this.loadMovies();
     this.isAdmin$ = this.authSvc.isAdmin();
+  }
+
+  loadMovies(page: number = 0): void {
+    this.movieSvc.getAllMovies(page, this.pageSize).subscribe(response => {
+      this.movies = response.content;
+      this.totalPages = response.totalPages;
+      this.currentPage = page;
+    });
   }
 
   onImageError(event: Event) {
@@ -63,6 +71,12 @@ export class MoviesComponent {
       this.router.navigate(['/movies', movieId]);
     } else {
       console.error('Movie ID is undefined.');
+    }
+  }
+
+  onPageChange(page: number): void {
+    if (page >= 0 && page < this.totalPages) {
+      this.loadMovies(page);
     }
   }
 }
