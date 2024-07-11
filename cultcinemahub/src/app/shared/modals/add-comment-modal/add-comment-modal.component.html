@@ -1,0 +1,16 @@
+<div class="modal-header">
+  <h5 class="modal-title">Aggiungi Commento</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
+</div>
+<div class="modal-body">
+  <form>
+    <div class="mb-3">
+      <label for="commentBody" class="form-label">Testo del Commento</label>
+      <textarea class="form-control" id="commentBody" [(ngModel)]="newComment.body" name="body" rows="4" required></textarea>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss()">Chiudi</button>
+  <button type="button" class="btn btn-primary" (click)="addComment()">Aggiungi Commento</button>
+</div>

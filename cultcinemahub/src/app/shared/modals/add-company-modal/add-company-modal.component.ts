@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { iCompany } from '../../models/icompany';
+import { iCompany } from '../../../models/icompany';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { CompanyService } from '../../services/company.service';
+import { CompanyService } from '../../../services/company.service';
 
 @Component({
   selector: 'app-add-company-modal',

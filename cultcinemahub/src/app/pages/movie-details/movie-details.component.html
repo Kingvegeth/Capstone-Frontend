@@ -7,22 +7,7 @@
   <p><strong>Descrizione:</strong> {{ movie.description }}</p>
   <p><strong>Valutazione Media:</strong> {{ getAverageRating() }}</p>
 
-  <h3>Cast</h3>
-  <p>{{ getCast() }}</p>
-
-  <h3>Registi</h3>
-  <p>{{ getDirectors() }}</p>
-
-  <h3>Sceneggiatori</h3>
-  <p>{{ getScreenwriters() }}</p>
-
-  <h3>Produttori</h3>
-  <p>{{ getProducers() }}</p>
-
-  <h3>Distribuito da</h3>
-  <p>{{ movie.distributor?.name }}</p>
-
-  <h2>Recensioni</h2>
+  <h3>Recensioni</h3>
   <div *ngFor="let review of movie.reviews ?? []" class="review card mb-3">
     <div class="card-body">
       <h3 class="card-title">{{ review.title }}</h3>
@@ -35,65 +20,20 @@
 
       <div *ngIf="review.comments && review.comments.length > 0" class="comments-section">
         <h4>Commenti</h4>
-        <div *ngFor="let comment of review.comments" class="comment-container">
-          <ng-container *ngTemplateOutlet="renderComment; context: { $implicit: comment }"></ng-container>
+        <div *ngFor="let review of movie.reviews">
+          <app-review
+            [review]="review"
+            [currentUser]="currentUser"
+            (addComment)="openAddCommentModalForReview($event)"
+            (editReview)="openEditReviewModal($event)"
+            (deleteReview)="deleteReview($event)">
+          </app-review>
         </div>
+      </div>
+
+      <div class="mt-3">
+        <button class="btn btn-primary" (click)="openAddCommentModalForReview(review.id!)">Aggiungi Commento</button>
       </div>
     </div>
   </div>
-
-  <div *ngIf="!hasReviewed" class="mt-4">
-    <h3>Aggiungi una recensione</h3>
-    <form (ngSubmit)="addReview()">
-      <div class="form-group">
-        <label for="reviewTitle">Titolo</label>
-        <input type="text" id="reviewTitle" [(ngModel)]="newReview.title" name="title" class="form-control" required>
-      </div>
-      <div class="form-group">
-        <label for="reviewBody">Testo</label>
-        <textarea id="reviewBody" [(ngModel)]="newReview.body" name="body" class="form-control" rows="4" required></textarea>
-      </div>
-      <div class="form-group">
-        <label for="reviewRating">Valutazione</label>
-        <select id="reviewRating" [(ngModel)]="newReview.rating" name="rating" class="form-control" required>
-          <option *ngFor="let rating of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" [value]="rating">{{ rating }}</option>
-        </select>
-      </div>
-      <button type="submit" class="btn btn-primary mt-3">Invia Recensione</button>
-    </form>
-  </div>
-
-  <ng-template #renderComment let-comment>
-    <div class="comment-container">
-      <p><strong>{{ comment.user.username }}</strong>: {{ comment.body }}</p>
-      <p class="small text-muted">
-        <span *ngIf="comment.updatedAt; else created" class="text-warning" [ngbTooltip]="comment.updatedAt | date: 'dd/MM/yyyy, HH:mm'">Modificato il: {{ comment.updatedAt | amTimeAgo }}</span>
-        <ng-template #created><span class="text-white" [ngbTooltip]="comment.createdAt | date: 'dd/MM/yyyy, HH:mm'">Creato il: {{ comment.createdAt | amTimeAgo }}</span></ng-template>
-      </p>
-      <div>
-        <button class="btn btn-link" (click)="logCommentDetails(comment)">Dettagli</button>
-        <div *ngIf="comment.user.id === currentUser?.id">
-          <button class="btn btn-link" (click)="editComment(comment)">Modifica</button>
-          <button class="btn btn-link" (click)="deleteComment(comment.id, comment.reviewId)">Elimina</button>
-        </div>
-        <div *ngIf="comment.user.id !== currentUser?.id">
-          <button class="btn btn-link" (click)="setReplyToComment(comment)">Rispondi</button>
-        </div>
-      </div>
-      <div *ngIf="replyToComment && replyToComment.id === comment.id">
-        <form (ngSubmit)="addReply(comment)">
-          <div class="form-group">
-            <label for="replyBody">Rispondi</label>
-            <textarea id="replyBody" [(ngModel)]="newComment.body" name="body" class="form-control" rows="4" required></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary mt-3">Invia Risposta</button>
-        </form>
-      </div>
-      <div class="replies" *ngIf="comment.replies && comment.replies.length > 0">
-        <div *ngFor="let reply of comment.replies" class="reply-container">
-          <ng-container *ngTemplateOutlet="renderComment; context: { $implicit: reply }"></ng-container>
-        </div>
-      </div>
-    </div>
-  </ng-template>
 </div>

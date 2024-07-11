@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { PersonService } from '../../services/person.service';
 import { iPerson } from '../../models/iperson';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { EditPersonModalComponent } from '../../shared/edit-person-modal/edit-person-modal.component';
-import { AddPersonModalComponent } from '../../shared/add-person-modal/add-person-modal.component';
+import { EditPersonModalComponent } from '../../shared/modals/edit-person-modal/edit-person-modal.component';
+import { AddPersonModalComponent } from '../../shared/modals/add-person-modal/add-person-modal.component';
 import { AuthService } from '../../auth/auth.service';
 
 

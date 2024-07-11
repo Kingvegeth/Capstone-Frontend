@@ -15,20 +15,26 @@ import { UsersService } from './users.service';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { MoviesComponent } from './pages/movies/movies.component';
 import { UnderConstructionComponent } from './pages/under-construction/under-construction.component';
-import { AddMovieModalComponent } from './shared/add-movie-modal/add-movie-modal.component';
-import { EditMovieModalComponent } from './shared/edit-movie-modal/edit-movie-modal.component';
+import { AddMovieModalComponent } from './shared/modals/add-movie-modal/add-movie-modal.component';
+import { EditMovieModalComponent } from './shared/modals/edit-movie-modal/edit-movie-modal.component';
 import { PeopleComponent } from './pages/people/people.component';
-import { EditPersonModalComponent } from './shared/edit-person-modal/edit-person-modal.component';
-import { AddPersonModalComponent } from './shared/add-person-modal/add-person-modal.component';
+import { EditPersonModalComponent } from './shared/modals/edit-person-modal/edit-person-modal.component';
+import { AddPersonModalComponent } from './shared/modals/add-person-modal/add-person-modal.component';
 import { CompaniesComponent } from './pages/companies/companies.component';
-import { AddCompanyModalComponent } from './shared/add-company-modal/add-company-modal.component';
-import { EditCompanyModalComponent } from './shared/edit-company-modal/edit-company-modal.component';
+import { AddCompanyModalComponent } from './shared/modals/add-company-modal/add-company-modal.component';
+import { EditCompanyModalComponent } from './shared/modals/edit-company-modal/edit-company-modal.component';
 import { MovieDetailsComponent } from './pages/movie-details/movie-details.component';
 import { MomentModule, NGX_MOMENT_OPTIONS } from 'ngx-moment';
 import moment from 'moment';
 import 'moment/locale/it';
 import { registerLocaleData } from '@angular/common';
 import localeIt from '@angular/common/locales/it';
+import { ReviewComponent } from './shared/components/review/review.component';
+import { CommentComponent } from './shared/components/comment/comment.component';
+import { AddReviewModalComponent } from './shared/modals/add-review-modal/add-review-modal.component';
+import { EditReviewModalComponent } from './shared/modals/edit-review-modal/edit-review-modal.component';
+import { AddCommentModalComponent } from './shared/modals/add-comment-modal/add-comment-modal.component';
+import { EditCommentModalComponent } from './shared/modals/edit-comment-modal/edit-comment-modal.component';
 
 registerLocaleData(localeIt);
 moment.locale('it');
@@ -51,7 +57,13 @@ moment.locale('it');
     CompaniesComponent,
     AddCompanyModalComponent,
     EditCompanyModalComponent,
-    MovieDetailsComponent
+    MovieDetailsComponent,
+    ReviewComponent,
+    CommentComponent,
+    AddReviewModalComponent,
+    EditReviewModalComponent,
+    AddCommentModalComponent,
+    EditCommentModalComponent
   ],
   imports: [
     BrowserModule,

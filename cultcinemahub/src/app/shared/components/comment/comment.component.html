@@ -1,0 +1,36 @@
+<div class="comment-container">
+  <p><strong>{{ comment.user.username || 'Unknown' }}</strong>: {{ comment.body }}</p>
+  <p class="small text-muted">
+    <span *ngIf="comment.updatedAt; else created" class="text-warning" [ngbTooltip]="comment.updatedAt | date: 'dd/MM/yyyy, HH:mm'">Modificato il: {{ comment.updatedAt | amTimeAgo }}</span>
+    <ng-template #created><span class="text-white" [ngbTooltip]="comment.createdAt | date: 'dd/MM/yyyy, HH:mm'">Creato il: {{ comment.createdAt | amTimeAgo }}</span></ng-template>
+  </p>
+  <div>
+    <div *ngIf="comment.user?.id === currentUser?.id">
+      <button class="btn btn-link" (click)="onEditComment(comment)">Modifica</button>
+      <button class="btn btn-link" (click)="onDeleteComment(comment.id)">Elimina</button>
+    </div>
+    <div *ngIf="comment.user?.id !== currentUser?.id">
+      <button class="btn btn-link" (click)="onReply(comment.id)">Rispondi</button>
+    </div>
+  </div>
+  <div *ngIf="replyToComment[comment.id]">
+    <form (ngSubmit)="addReply(comment.id)">
+      <div class="form-group">
+        <label for="replyBody">Rispondi</label>
+        <textarea id="replyBody" [(ngModel)]="newComments[comment.reviewId!].body" name="body" class="form-control" rows="4" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary mt-3">Invia Risposta</button>
+    </form>
+  </div>
+  <div class="replies" *ngIf="comment.replies && comment.replies.length > 0">
+    <div *ngFor="let reply of comment.replies" class="reply-container">
+      <app-comment
+        [comment]="reply"
+        [currentUser]="currentUser"
+        (reply)="onReply($event)"
+        (editComment)="onEditComment($event)"
+        (deleteComment)="onDeleteComment($event)">
+      </app-comment>
+    </div>
+  </div>
+</div>

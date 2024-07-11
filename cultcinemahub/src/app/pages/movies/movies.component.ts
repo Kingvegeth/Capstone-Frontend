@@ -4,9 +4,9 @@ import { iMovie } from '../../models/imovie';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AddMovieModalComponent } from '../../shared/add-movie-modal/add-movie-modal.component';
+import { AddMovieModalComponent } from '../../shared/modals/add-movie-modal/add-movie-modal.component';
 import { Router } from '@angular/router';
-import { EditMovieModalComponent } from '../../shared/edit-movie-modal/edit-movie-modal.component';
+import { EditMovieModalComponent } from '../../shared/modals/edit-movie-modal/edit-movie-modal.component';
 
 @Component({
   selector: 'app-movies',

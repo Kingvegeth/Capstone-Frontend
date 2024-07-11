@@ -1,11 +1,11 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { iMovie, iGenre } from '../../models/imovie';
-import { MovieService } from '../../services/movie.service';
-import { iPerson } from '../../models/iperson';
-import { iCompany } from '../../models/icompany';
-import { PersonService } from '../../services/person.service';
-import { CompanyService } from '../../services/company.service';
+import { iMovie, iGenre } from '../../../models/imovie';
+import { MovieService } from '../../../services/movie.service';
+import { iPerson } from '../../../models/iperson';
+import { iCompany } from '../../../models/icompany';
+import { PersonService } from '../../../services/person.service';
+import { CompanyService } from '../../../services/company.service';
 
 @Component({
   selector: 'app-add-movie-modal',

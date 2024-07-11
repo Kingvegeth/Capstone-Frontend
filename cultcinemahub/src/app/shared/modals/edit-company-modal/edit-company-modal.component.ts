@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { iCompany } from '../../models/icompany';
+import { iCompany } from '../../../models/icompany';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { CompanyService } from '../../services/company.service';
+import { CompanyService } from '../../../services/company.service';
 
 @Component({
   selector: 'app-edit-company-modal',

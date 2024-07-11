@@ -9,6 +9,11 @@ import { iUser } from '../../models/iuser';
 import { UsersService } from '../../users.service';
 import { iComment } from '../../models/icomment';
 import { CommentService } from '../../services/comment.service';
+import { AddReviewModalComponent } from '../../shared/modals/add-review-modal/add-review-modal.component';
+import { EditReviewModalComponent } from '../../shared/modals/edit-review-modal/edit-review-modal.component';
+import { AddCommentModalComponent } from '../../shared/modals/add-comment-modal/add-comment-modal.component';
+import { EditCommentModalComponent } from '../../shared/modals/edit-comment-modal/edit-comment-modal.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-movie-details',
@@ -17,42 +22,35 @@ import { CommentService } from '../../services/comment.service';
 })
 export class MovieDetailsComponent {
   movie: iMovie | undefined;
-  newReview: Partial<iReview> = {};
-  newComment: Partial<iComment> = {};
-  hasReviewed: boolean = false;
-  currentUser: iUser | undefined;
-  replyToComment: iComment | undefined;
-  editingComment: iComment | undefined;
+  currentUser!: iUser; // Ensure currentUser is not undefined
+  newComments: { [reviewId: number]: Partial<iComment> } = {};
 
   constructor(
     private route: ActivatedRoute,
     private movieSvc: MovieService,
     private reviewSvc: ReviewService,
     private commentSvc: CommentService,
-    private userSvc: UsersService
+    private userSvc: UsersService,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
     this.getMovieDetails();
     this.userSvc.getCurrentUser().subscribe(user => {
       this.currentUser = user;
-      this.checkIfReviewed();
     });
   }
 
   getMovieDetails(): void {
     const id = +this.route.snapshot.paramMap.get('id')!;
     this.movieSvc.getMovieById(id).subscribe((movie: iMovie) => {
-      console.log('Received movie data:', movie);
       this.movie = movie;
-      this.checkIfReviewed();
-
       this.movie.reviews?.forEach(review => {
+        this.newComments[review.id!] = {}; // Initialize newComments for each review
         this.reviewSvc.getReviewById(review.id!).subscribe(detailedReview => {
           const index = this.movie!.reviews!.findIndex(r => r.id === review.id);
           if (index !== -1) {
             this.movie!.reviews![index] = detailedReview;
-            console.log('Detailed review received:', detailedReview);
           }
           this.loadCommentsForReview(detailedReview);
         });
@@ -63,7 +61,6 @@ export class MovieDetailsComponent {
   loadCommentsForReview(review: iReview): void {
     this.commentSvc.getCommentsByReviewId(review.id!).subscribe(comments => {
       review.comments = this.structureComments(comments);
-      console.log('Loaded comments for review:', review);
     });
   }
 
@@ -84,179 +81,135 @@ export class MovieDetailsComponent {
     return structuredComments;
   }
 
-  getGenres(): string {
-    return this.movie?.genres?.join(', ') || 'N/A';
-  }
-
-  checkIfReviewed(): void {
-    if (this.currentUser && this.movie) {
-      this.hasReviewed = this.movie.reviews?.some(review => review.user?.id === this.currentUser?.id) || false;
-    }
-  }
-
-  addReview(): void {
-    if (!this.newReview.title || !this.newReview.body || !this.newReview.rating || !this.currentUser || !this.movie) {
-      console.error('Please fill all fields');
-      return;
-    }
-
-    const review: Partial<iReview> = {
-      title: this.newReview.title ?? '',
-      body: this.newReview.body ?? '',
-      rating: this.newReview.rating ?? 0,
-      userId: this.currentUser.id,
-      movieId: this.movie.id,
-      createdAt: new Date().toISOString()
-    };
-
-    console.log('Review data to be sent:', review);
-
-    this.reviewSvc.createReview(review).subscribe(
-      (createdReview) => {
-        console.log('Created review:', createdReview);
-        if (this.movie?.reviews) {
-          this.movie.reviews.push(createdReview);
-        } else {
-          this.movie!.reviews = [createdReview];
-        }
-        this.newReview = {};
-        this.hasReviewed = true;
-      },
-      (error) => {
-        console.error('Error creating review:', error);
+  openAddReviewModal() {
+    const modalRef = this.modalService.open(AddReviewModalComponent);
+    modalRef.componentInstance.movieId = this.movie?.id; // Pass the movieId to the modal
+    modalRef.componentInstance.reviewAdded.subscribe((newReview: iReview) => {
+      if (this.movie?.reviews) {
+        this.movie.reviews.push(newReview);
+      } else {
+        this.movie!.reviews = [newReview];
       }
-    );
+    });
   }
 
-  addComment(reviewId: number, parentId?: number): void {
-    if (!this.newComment.body || !this.currentUser) {
-        console.error('Please fill all fields');
-        return;
-    }
-
-    const comment: Partial<iComment> = {
-        body: this.newComment.body ?? '',
-        userId: this.currentUser.id!,
-        reviewId: reviewId,
-        parentId: parentId ?? null,
-        createdAt: new Date().toISOString()
-    };
-
-    console.log('Sending comment data:', comment);
-
-    this.commentSvc.addComment(comment).subscribe(
-        (createdComment) => {
-            console.log('Created comment:', createdComment);
-            const review = this.movie?.reviews?.find(r => r.id === reviewId);
-            if (review) {
-                if (createdComment.parentId) {
-                    const parentComment = this.findCommentById(review.comments!, createdComment.parentId);
-                    if (parentComment?.replies) {
-                        parentComment.replies.push(createdComment);
-                    } else {
-                        parentComment!.replies = [createdComment];
-                    }
-                } else {
-                    if (review.comments) {
-                        review.comments.push(createdComment);
-                    } else {
-                        review.comments = [createdComment];
-                    }
-                }
-            }
-            this.newComment = {};
-            this.replyToComment = undefined;
-        },
-        (error) => {
-            console.error('Error creating comment:', error);
+  openEditReviewModal(review: iReview) {
+    const modalRef = this.modalService.open(EditReviewModalComponent);
+    modalRef.componentInstance.review = review;
+    modalRef.componentInstance.reviewUpdated.subscribe((updatedReview: iReview | null) => {
+      if (updatedReview) {
+        const index = this.movie!.reviews!.findIndex(r => r.id === updatedReview.id);
+        if (index !== -1) {
+          this.movie!.reviews![index] = updatedReview;
         }
-    );
-}
-
-deleteComment(commentId: number, reviewId: number): void {
-  this.commentSvc.deleteComment(commentId).subscribe(
-    () => {
-      const review = this.movie?.reviews?.find(r => r.id === reviewId);
-      if (review) {
-        review.comments = review.comments?.filter(c => c.id !== commentId);
+      } else {
+        this.movie!.reviews = this.movie!.reviews!.filter(r => r.id !== review.id);
       }
-    },
-    (error) => {
-      console.error('Error deleting comment:', error);
-    }
-  );
-}
-
-removeCommentById(comments: iComment[], commentId: number): iComment[] {
-  const filteredComments: iComment[] = [];
-  comments.forEach(comment => {
-    if (comment.id !== commentId) {
-      comment.replies = this.removeCommentById(comment.replies!, commentId);
-      filteredComments.push(comment);
-    }
-  });
-  return filteredComments;
-}
-
-  addReply(comment: iComment): void {
-    this.addComment(comment.reviewId!, comment.id);
+    });
   }
 
-  setReplyToComment(comment: iComment): void {
-    this.replyToComment = comment;
-    this.newComment.body = '';
-  }
-
-  editComment(comment: iComment): void {
-    this.editingComment = { ...comment }; // Crea una copia dell'oggetto commento
-  }
-
-  updateComment(comment: iComment): void {
-    if (!comment.body || !this.currentUser) {
-      console.error('Please fill all fields');
-      return;
-    }
-
-    this.commentSvc.updateComment(comment).subscribe(
-      (updatedComment) => {
-        const review = this.movie?.reviews?.find(r => r.id === updatedComment.reviewId);
+  openAddCommentModalForReview(reviewId: number) {
+    if (reviewId !== undefined) {
+      const modalRef = this.modalService.open(AddCommentModalComponent);
+      modalRef.componentInstance.reviewId = reviewId;
+      modalRef.componentInstance.commentAdded.subscribe((newComment: iComment) => {
+        const review = this.movie?.reviews?.find(r => r.id === reviewId);
         if (review) {
-          const originalComment = this.findCommentById(review.comments!, updatedComment.id);
-          if (originalComment) {
-            originalComment.body = updatedComment.body;
-            originalComment.updatedAt = updatedComment.updatedAt;
+          if (review.comments) {
+            review.comments.push(newComment);
+          } else {
+            review.comments = [newComment];
           }
         }
-        this.editingComment = undefined;
+      });
+    }
+  }
+
+  openAddCommentModalForComment(commentId: number) {
+    const modalRef = this.modalService.open(AddCommentModalComponent);
+    modalRef.componentInstance.parentId = commentId;
+    modalRef.componentInstance.commentAdded.subscribe((newComment: iComment) => {
+      const review = this.movie?.reviews?.find(r => r.comments?.some(c => c.id === commentId));
+      if (review) {
+        const parentComment = this.findCommentById(review.comments!, commentId);
+        if (parentComment?.replies) {
+          parentComment.replies.push(newComment);
+        } else {
+          parentComment!.replies = [newComment];
+        }
+      }
+    });
+  }
+
+  openEditCommentModal(comment: iComment) {
+    const modalRef = this.modalService.open(EditCommentModalComponent);
+    modalRef.componentInstance.comment = comment;
+    modalRef.componentInstance.commentUpdated.subscribe((updatedComment: iComment) => {
+      const review = this.movie?.reviews?.find(r => r.id === updatedComment.reviewId);
+      if (review) {
+        const originalComment = this.findCommentById(review.comments!, updatedComment.id);
+        if (originalComment) {
+          originalComment.body = updatedComment.body;
+          originalComment.updatedAt = updatedComment.updatedAt;
+        }
+      }
+    });
+  }
+
+  onReplyComment(commentId: number) {
+    const reviewId = this.movie?.reviews?.find(r => r.comments?.some(c => c.id === commentId))?.id;
+    if (reviewId !== undefined) {
+      const modalRef = this.modalService.open(AddCommentModalComponent);
+      modalRef.componentInstance.parentCommentId = commentId;
+      modalRef.componentInstance.reviewId = reviewId;
+      modalRef.componentInstance.commentAdded.subscribe((newComment: iComment) => {
+        const review = this.movie?.reviews?.find(r => r.id === reviewId);
+        if (review) {
+          const parentComment = this.findCommentById(review.comments!, commentId);
+          if (parentComment?.replies) {
+            parentComment.replies.push(newComment);
+          } else {
+            parentComment!.replies = [newComment];
+          }
+        }
+      });
+    }
+  }
+
+  deleteReview(reviewId: number): void {
+    this.reviewSvc.deleteReview(reviewId).subscribe(() => {
+      if (this.movie) {
+        this.movie.reviews = this.movie.reviews?.filter(review => review.id !== reviewId);
+      }
+    }, (error) => {
+      console.error('Error deleting review:', error);
+    });
+  }
+
+  deleteComment(commentId: number): void {
+    this.commentSvc.deleteComment(commentId).subscribe(
+      () => {
+        this.movie?.reviews?.forEach(review => {
+          review.comments = review.comments?.filter(c => c.id !== commentId);
+        });
       },
       (error) => {
-        console.error('Error updating comment:', error);
+        console.error('Error deleting comment:', error);
       }
     );
   }
 
-  logCommentDetails(comment: iComment): void {
-    console.log('Comment details:', comment);
+
+  onEditReview(review: iReview): void {
+    this.openEditReviewModal(review);
   }
 
-  logAllComments(): void {
-    this.movie?.reviews?.forEach(review => {
-      review.comments?.forEach(comment => {
-        this.logCommentDetails(comment);
-        if (comment.replies && comment.replies.length > 0) {
-          this.logNestedComments(comment.replies);
-        }
-      });
-    });
+  onEditComment(comment: iComment): void {
+    this.openEditCommentModal(comment);
   }
 
-  logNestedComments(comments: iComment[]): void {
-    comments.forEach(comment => {
-      this.logCommentDetails(comment);
-      if (comment.replies && comment.replies.length > 0) {
-        this.logNestedComments(comment.replies);
-      }
-    });
+  onDeleteComment(commentId: number): void {
+    this.deleteComment(commentId);
   }
 
   findCommentById(comments: iComment[], id: number): iComment | undefined {
@@ -278,6 +231,10 @@ removeCommentById(comments: iComment[], commentId: number): iComment[] {
     (event.target as HTMLImageElement).src = 'assets/img/default/default-movie.png';
   }
 
+  getGenres(): string {
+    return this.movie?.genres?.join(', ') || 'N/A';
+  }
+
   getCast(): string {
     return this.movie?.cast?.map(person => `${person.firstName} ${person.lastName}`).join(', ') || 'N/A';
   }
@@ -292,10 +249,6 @@ removeCommentById(comments: iComment[], commentId: number): iComment[] {
 
   getProducers(): string {
     return this.movie?.producers?.map(company => company.name).join(', ') || 'N/A';
-  }
-
-  getReviews(): string {
-    return this.movie?.reviews?.map(review => `${review.body} - ${review.rating} stars`).join('<br>') || 'N/A';
   }
 
   getAverageRating(): string {

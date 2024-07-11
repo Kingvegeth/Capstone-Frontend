@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { iPerson } from '../../models/iperson';
+import { iPerson } from '../../../models/iperson';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { PersonService } from '../../services/person.service';
+import { PersonService } from '../../../services/person.service';
 
 @Component({
   selector: 'app-add-person-modal',

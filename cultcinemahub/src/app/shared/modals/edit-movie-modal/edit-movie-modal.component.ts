@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { iGenre, iMovie } from '../../models/imovie';
+import { iGenre, iMovie } from '../../../models/imovie';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { MovieService } from '../../services/movie.service';
+import { MovieService } from '../../../services/movie.service';
 
 @Component({
   selector: 'app-edit-movie-modal',

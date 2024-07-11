@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { iCompany } from '../../models/icompany';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CompanyService } from '../../services/company.service';
-import { AddCompanyModalComponent } from '../../shared/add-company-modal/add-company-modal.component';
-import { EditCompanyModalComponent } from '../../shared/edit-company-modal/edit-company-modal.component';
+import { AddCompanyModalComponent } from '../../shared/modals/add-company-modal/add-company-modal.component';
+import { EditCompanyModalComponent } from '../../shared/modals/edit-company-modal/edit-company-modal.component';
 import { AuthService } from '../../auth/auth.service';
 
 @Component({

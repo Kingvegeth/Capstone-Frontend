@@ -1,0 +1,27 @@
+<div class="modal-header">
+  <h5 class="modal-title">Modifica Recensione</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
+</div>
+<div class="modal-body">
+  <form>
+    <div class="mb-3">
+      <label for="title" class="form-label">Titolo</label>
+      <input type="text" class="form-control" id="title" [(ngModel)]="review.title" name="title" required>
+    </div>
+    <div class="mb-3">
+      <label for="body" class="form-label">Testo</label>
+      <textarea class="form-control" id="body" [(ngModel)]="review.body" name="body" required></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="rating" class="form-label">Valutazione</label>
+      <select class="form-select" id="rating" [(ngModel)]="review.rating" name="rating" required>
+        <option *ngFor="let rating of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" [value]="rating">{{ rating }}</option>
+      </select>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss()">Chiudi</button>
+  <button type="button" class="btn btn-danger" (click)="deleteReview()">Elimina</button>
+  <button type="button" class="btn btn-primary" (click)="updateReview()">Salva modifiche</button>
+</div>
