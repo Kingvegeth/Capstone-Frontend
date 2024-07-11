@@ -145,15 +145,26 @@ export class MovieDetailsComponent {
     const modalRef = this.modalService.open(EditCommentModalComponent);
     modalRef.componentInstance.comment = comment;
     modalRef.componentInstance.commentUpdated.subscribe((updatedComment: iComment) => {
-      const review = this.movie?.reviews?.find(r => r.id === updatedComment.reviewId);
-      if (review) {
-        const originalComment = this.findCommentById(review.comments!, updatedComment.id);
-        if (originalComment) {
-          originalComment.body = updatedComment.body;
-          originalComment.updatedAt = updatedComment.updatedAt;
+      this.commentSvc.updateComment(updatedComment).subscribe(
+        (response) => {
+          this.updateComment(response);
+        },
+        (error) => {
+          console.error('Error updating comment:', error);
         }
-      }
+      );
     });
+  }
+
+  updateComment(updatedComment: iComment) {
+    const review = this.movie?.reviews?.find(r => r.id === updatedComment.reviewId);
+    if (review) {
+      const originalComment = this.findCommentById(review.comments!, updatedComment.id);
+      if (originalComment) {
+        originalComment.body = updatedComment.body;
+        originalComment.updatedAt = updatedComment.updatedAt;
+      }
+    }
   }
 
   onReplyComment(commentId: number) {
