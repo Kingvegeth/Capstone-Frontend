@@ -108,12 +108,27 @@ export class MovieDetailsComponent {
     });
   }
 
-  openAddCommentModalForReview(reviewId: number) {
+  openAddCommentModal(reviewId?: number, parentId?: number) {
+    const modalRef = this.modalService.open(AddCommentModalComponent);
     if (reviewId !== undefined) {
-      const modalRef = this.modalService.open(AddCommentModalComponent);
       modalRef.componentInstance.reviewId = reviewId;
-      modalRef.componentInstance.commentAdded.subscribe((newComment: iComment) => {
-        const review = this.movie?.reviews?.find(r => r.id === reviewId);
+    }
+    if (parentId !== undefined) {
+      modalRef.componentInstance.parentId = parentId;
+    }
+    modalRef.componentInstance.commentAdded.subscribe((newComment: iComment) => {
+      if (newComment.parentId) {
+        const review = this.movie?.reviews?.find(r => r.id === newComment.reviewId);
+        if (review) {
+          const parentComment = this.findCommentById(review.comments!, newComment.parentId);
+          if (parentComment?.replies) {
+            parentComment.replies.push(newComment);
+          } else {
+            parentComment!.replies = [newComment];
+          }
+        }
+      } else if (newComment.reviewId) {
+        const review = this.movie?.reviews?.find(r => r.id === newComment.reviewId);
         if (review) {
           if (review.comments) {
             review.comments.push(newComment);
@@ -121,25 +136,10 @@ export class MovieDetailsComponent {
             review.comments = [newComment];
           }
         }
-      });
-    }
-  }
-
-  openAddCommentModalForComment(commentId: number) {
-    const modalRef = this.modalService.open(AddCommentModalComponent);
-    modalRef.componentInstance.parentId = commentId;
-    modalRef.componentInstance.commentAdded.subscribe((newComment: iComment) => {
-      const review = this.movie?.reviews?.find(r => r.comments?.some(c => c.id === commentId));
-      if (review) {
-        const parentComment = this.findCommentById(review.comments!, commentId);
-        if (parentComment?.replies) {
-          parentComment.replies.push(newComment);
-        } else {
-          parentComment!.replies = [newComment];
-        }
       }
     });
   }
+
 
   openEditCommentModal(comment: iComment) {
     const modalRef = this.modalService.open(EditCommentModalComponent);

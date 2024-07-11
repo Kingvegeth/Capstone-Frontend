@@ -37,4 +37,8 @@ export class CommentComponent {
     console.log('Replying to comment:', commentId);
     this.reply.emit(commentId);
   }
+
+  createdByCurrentUser(): boolean {
+    return this.currentUser?.id === this.comment.user?.id;
+  }
 }

@@ -6,7 +6,7 @@ import { CommentService } from '../../../services/comment.service';
 @Component({
   selector: 'app-add-comment-modal',
   templateUrl: './add-comment-modal.component.html',
-  styleUrl: './add-comment-modal.component.scss'
+  styleUrls: ['./add-comment-modal.component.scss']
 })
 export class AddCommentModalComponent {
   @Output() commentAdded = new EventEmitter<iComment>();
@@ -29,7 +29,6 @@ export class AddCommentModalComponent {
         return;
     }
 
-
     if (this.parentId === undefined && this.reviewId === undefined) {
         console.error('Please fill all fields - Both parentId and reviewId are missing');
         return;
@@ -41,7 +40,6 @@ export class AddCommentModalComponent {
         reviewId: this.reviewId,
         createdAt: new Date().toISOString()
     };
-
 
     console.log('Trying to send comment:', comment);
 

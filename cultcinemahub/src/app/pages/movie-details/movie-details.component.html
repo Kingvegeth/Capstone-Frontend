@@ -20,19 +20,17 @@
 
       <div *ngIf="review.comments && review.comments.length > 0" class="comments-section">
         <h4>Commenti</h4>
-        <div *ngFor="let review of movie.reviews">
-          <app-review
-            [review]="review"
-            [currentUser]="currentUser"
-            (addComment)="openAddCommentModalForReview($event)"
-            (editReview)="openEditReviewModal($event)"
-            (deleteReview)="deleteReview($event)">
-          </app-review>
+        <div *ngFor="let comment of review.comments" class="comment-container">
+          <app-comment [comment]="comment"
+                       [currentUser]="currentUser"
+                       (editComment)="onEditComment($event)"
+                       (deleteComment)="onDeleteComment($event)"
+                       (reply)="openAddCommentModal(undefined, $event)"></app-comment>
         </div>
       </div>
 
       <div class="mt-3">
-        <button class="btn btn-primary" (click)="openAddCommentModalForReview(review.id!)">Aggiungi Commento</button>
+        <button class="btn btn-primary" (click)="openAddCommentModal(review.id)">Aggiungi Commento</button>
       </div>
     </div>
   </div>
