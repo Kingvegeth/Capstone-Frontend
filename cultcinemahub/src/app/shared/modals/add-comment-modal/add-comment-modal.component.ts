@@ -36,8 +36,8 @@ export class AddCommentModalComponent {
 
     const comment: Partial<iComment> = {
         body: this.newComment.body,
-        parentId: this.parentId,
-        reviewId: this.reviewId,
+        parentId: this.parentId ? this.parentId : undefined,
+        reviewId: this.reviewId ? this.reviewId : undefined,
         createdAt: new Date().toISOString()
     };
 

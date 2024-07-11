@@ -21,7 +21,12 @@ export class CommentService {
   }
 
   addComment(comment: Partial<iComment>): Observable<iComment> {
-    return this.http.post<iComment>(this.commentsUrl, comment);
+    const payload = {
+      body: comment.body,
+      reviewId: comment.reviewId ? comment.reviewId : null,
+      parentCommentId: comment.parentId ? comment.parentId : null
+    };
+    return this.http.post<iComment>(`${this.commentsUrl}`, payload);
   }
 
   updateComment(comment: Partial<iComment>): Observable<iComment> {
