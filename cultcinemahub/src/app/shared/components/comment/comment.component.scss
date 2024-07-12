@@ -1,0 +1,53 @@
+@import '../../../../styles/colors';
+
+.comment-container {
+  border: 1px solid #444;
+  border-radius: 10px;
+  background-color: rgba(77, 77, 77, 0.37);
+  color: white;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.comment-container p {
+  margin: 0;
+}
+
+.comment-container .small {
+  font-size: 0.875rem;
+  color: #999999;
+}
+
+.comment-container .text-warning {
+  color: #ffc107 !important;
+}
+
+.comment-container .text-white {
+  color: #ffffff !important;
+}
+
+.comment-container button.btn-link {
+  margin-top: 20px;
+  color: rgb(255, 255, 255);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.comment-container .form-group {
+  margin-top: 10px;
+}
+
+.comment-container .btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.replies {
+  margin-top: 15px;
+  padding-left: 20px;
+  border-left: 2px solid #555;
+}
+
+.reply-container {
+  margin-top: 10px;
+}

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { iUser } from './models/iuser';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { environment } from '../environments/environment.development';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +26,9 @@ export class UsersService {
 
   getCurrentUser(): Observable<iUser> {
     const url = `${this.usersUrl}/me`;
-    return this.http.get<iUser>(url);
+    return this.http.get<iUser>(url).pipe(
+      tap(user => console.log('Fetched current user:', user))
+    );
   }
 
   updateUser(user: iUser): Observable<iUser> {

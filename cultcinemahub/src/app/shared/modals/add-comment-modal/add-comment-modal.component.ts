@@ -19,6 +19,13 @@ export class AddCommentModalComponent {
     private commentSvc: CommentService
   ) {}
 
+
+ngOnInit(){
+  console.log(this.parentId);
+
+}
+
+
   addComment() {
     console.log('newComment.body:', this.newComment.body);
     console.log('parentId:', this.parentId);

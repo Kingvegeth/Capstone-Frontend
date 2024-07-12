@@ -11,15 +11,18 @@
     <div *ngIf="review.comments && review.comments.length > 0" class="comments-section">
       <h4>Commenti</h4>
       <div *ngFor="let comment of review.comments" class="comment-container">
-        <app-comment [comment]="comment"
-                     (editComment)="onEditComment($event)"
-                     (deleteComment)="onDeleteComment($event)"
-                     (reply)="onReplyComment($event)"></app-comment>
+        <app-comment
+          [comment]="comment"
+          [currentUser]="currentUser"
+          (reply)="onReplyComment($event)"
+          (editComment)="onEditComment($event)"
+          (deleteComment)="onDeleteComment($event)">
+        </app-comment>
       </div>
     </div>
 
-    <button *ngIf="createdByCurrenUser()" class="btn btn-secondary mt-3" (click)="onEditReview()">Modifica Recensione</button>
-    <button *ngIf="createdByCurrenUser()" class="btn btn-danger mt-3" (click)="onDeleteReview()">Elimina Recensione</button>
-    <button *ngIf="!createdByCurrenUser()" class="btn btn-primary mt-3" (click)="onAddComment()">Aggiungi Commento</button>
+    <button *ngIf="createdByCurrentUser()" class="btn btn-secondary mt-3" (click)="onEditReview()">Modifica Recensione</button>
+    <button *ngIf="createdByCurrentUser()" class="btn btn-danger mt-3" (click)="onDeleteReview()">Elimina Recensione</button>
+    <button *ngIf="!createdByCurrentUser() && currentUser" class="btn btn-primary mt-3" (click)="onAddComment()">Aggiungi Commento</button>
   </div>
 </div>

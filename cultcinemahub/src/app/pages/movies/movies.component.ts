@@ -7,6 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddMovieModalComponent } from '../../shared/modals/add-movie-modal/add-movie-modal.component';
 import { Router } from '@angular/router';
 import { EditMovieModalComponent } from '../../shared/modals/edit-movie-modal/edit-movie-modal.component';
+import { iUser } from '../../models/iuser';
 
 @Component({
   selector: 'app-movies',
@@ -19,6 +20,7 @@ export class MoviesComponent {
   totalPages: number = 0;
   currentPage: number = 0;
   pageSize: number = 3;
+
 
   constructor(
     private movieSvc: MovieService,

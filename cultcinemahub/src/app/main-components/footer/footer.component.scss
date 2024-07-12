@@ -1,6 +1,11 @@
+@import '../../../styles/colors';
+
 footer{
-  background-color: #000;
+  background-color: $main-dark-blue;
   height: 100px;
+
+  margin-bottom: 0;
+  padding-block: 55px 15px;
 }
 
 

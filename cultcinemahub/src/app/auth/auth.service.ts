@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment.development';
 import { iLoginData } from '../models/ilogindata';
+import { UsersService } from '../users.service';
 
 type AccessData = {
   token: string,
@@ -32,7 +33,8 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private usersSvc: UsersService
   ) {
     this.restoreUser();
   }
@@ -68,7 +70,6 @@ export class AuthService {
   login(loginData: iLoginData, rememberMe: boolean): Observable<AccessData> {
     return this.http.post<AccessData>(this.loginUrl, loginData).pipe(
       tap(data => {
-        this.authSubject.next(data.user);
         this.setToken(data.token);
         if (rememberMe) {
           localStorage.setItem('accessData', JSON.stringify(data));
@@ -76,10 +77,26 @@ export class AuthService {
           sessionStorage.setItem('accessData', JSON.stringify(data));
         }
         this.autoLogout(data.token);
+        this.loadCurrentUser().subscribe(() => {
+          this.router.navigate(['/home']);
+        });
       }),
       catchError(error => {
         throw error;
       })
+    );
+  }
+
+  updateCurrentUser(user: iUser) {
+    this.authSubject.next(user);
+  }
+
+  loadCurrentUser(): Observable<void> {
+    return this.usersSvc.getCurrentUser().pipe(
+      tap(user => {
+        this.authSubject.next(user);
+      }),
+      map(() => void 0)
     );
   }
 
@@ -149,4 +166,6 @@ export class AuthService {
     }
     return new Error(`Qualcosa è andato storto! Dettagli: ${err.message}`);
   }
+
+
 }

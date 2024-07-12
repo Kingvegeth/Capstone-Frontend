@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { iUser } from '../../models/iuser';
 import { UsersService } from '../../users.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -25,10 +26,10 @@ export class ProfileComponent {
     email: false
   };
 
-  constructor(private userService: UsersService) {}
+  constructor(private userSvc: UsersService, private authSvc: AuthService) {}
 
   ngOnInit() {
-    this.userService.getCurrentUser().subscribe((data: iUser) => {
+    this.userSvc.getCurrentUser().subscribe((data: iUser) => {
       this.user = data;
     });
   }
@@ -36,8 +37,9 @@ export class ProfileComponent {
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];
     if (this.selectedFile) {
-      this.userService.uploadAvatar(this.selectedFile).subscribe((response: iUser) => {
+      this.userSvc.uploadAvatar(this.selectedFile).subscribe((response: iUser) => {
         this.user.avatar = response.avatar;
+        this.authSvc.updateCurrentUser(response);
       });
     }
   }
@@ -47,12 +49,12 @@ export class ProfileComponent {
   }
 
   confirmEdit(field: string) {
-    this.userService.updateUser(this.user).subscribe((response: iUser) => {
+    this.userSvc.updateUser(this.user).subscribe((response: iUser) => {
       alert(`${field} aggiornato con successo!`);
       this.editMode[field] = false;
+      this.authSvc.updateCurrentUser(response);
     });
   }
-
 
   resetEditMode() {
     for (let field in this.editMode) {

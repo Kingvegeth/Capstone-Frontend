@@ -3,7 +3,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  height: 100vh;
+
 
   h1{
     text-align: center;
@@ -17,7 +17,7 @@
 
 .image-container {
   position: absolute;
-  bottom: 20px;
+  bottom: 120px;
   left: 50%;
   transform: translateX(-50%);
 }

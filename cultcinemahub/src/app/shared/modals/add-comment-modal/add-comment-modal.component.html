@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h5 class="modal-title">Aggiungi Commento</h5>
+  <h5 class="modal-title">{{ parentId ? 'Rispondi al Commento' : 'Aggiungi Commento' }}</h5>
   <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
 </div>
 <div class="modal-body">
@@ -12,5 +12,5 @@
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss()">Chiudi</button>
-  <button type="button" class="btn btn-primary" (click)="addComment()">Aggiungi Commento</button>
+  <button type="button" class="btn btn-primary" (click)="addComment()">{{ parentId ? 'Rispondi' : 'Aggiungi Commento' }}</button>
 </div>

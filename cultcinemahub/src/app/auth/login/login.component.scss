@@ -1,38 +1,52 @@
 @import '../../../styles/colors';
 
 
-.btn {
-  width: 130px;
-  height: 40px;
-  font-size: 1.1em;
-  cursor: pointer;
-  background-color: #b98209;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  transition: all .4s;
- }
-
- .btn:hover {
-  border-radius: 5px;
-  transform: translateY(-10px);
-  background-color: #f3d007;
-  box-shadow: 5px 7px 0 -2px #8d5e20,
-   10px 15px 0 -4px #6d1622,
-   10px 16px 10px -3px #6d1616;
- }
-
- .btn:active {
-  transition: all 0.2s;
-  transform: translateY(-5px);
-  background-color: #9b6b02;
-  box-shadow: 5px 2px 0 -2px #8d5e20,
-   10px 8px 0 -4px #6d1616,
-   10px 12px 10px -3px #6d1616;
- }
-
+#login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 170px);
+}
 
 .login-wrapper{
-  margin-block: 50px;
+  border-radius: 30px;
+  background-color: $main-blue;
+  width: 700px;
+
 }
+
+
+
+// .btn {
+//   width: 130px;
+//   height: 40px;
+//   font-size: 1.1em;
+//   cursor: pointer;
+//   background-color: #b98209;
+//   color: #fff;
+//   border: none;
+//   border-radius: 5px;
+//   transition: all .4s;
+//  }
+
+//  .btn:hover {
+//   border-radius: 5px;
+//   transform: translateY(-10px);
+//   background-color: #f3d007;
+//   box-shadow: 5px 7px 0 -2px #8d5e20,
+//    10px 15px 0 -4px #6d1622,
+//    10px 16px 10px -3px #6d1616;
+//  }
+
+//  .btn:active {
+//   transition: all 0.2s;
+//   transform: translateY(-5px);
+//   background-color: #9b6b02;
+//   box-shadow: 5px 2px 0 -2px #8d5e20,
+//    10px 8px 0 -4px #6d1616,
+//    10px 12px 10px -3px #6d1616;
+//  }
+
+
+
 

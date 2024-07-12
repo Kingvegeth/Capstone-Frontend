@@ -10,7 +10,7 @@ import { iUser } from '../../../models/iuser';
 })
 export class ReviewComponent {
   @Input() review!: iReview;
-  @Input() currentUser!: iUser;
+  @Input() currentUser?: iUser;
   @Output() addComment = new EventEmitter<number>();
   @Output() editReview = new EventEmitter<iReview>();
   @Output() deleteReview = new EventEmitter<number>();
@@ -39,10 +39,11 @@ export class ReviewComponent {
   }
 
   onReplyComment(commentId: number) {
+    console.log('Emitting replyComment event with commentId:', commentId);
     this.replyComment.emit(commentId);
   }
 
-  createdByCurrenUser(): boolean {
+  createdByCurrentUser(): boolean {
     return this.currentUser?.id === this.review.user?.id;
   }
 }

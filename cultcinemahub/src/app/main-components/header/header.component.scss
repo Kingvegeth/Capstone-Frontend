@@ -1,34 +1,52 @@
 @import '../../../styles/colors';
 
-header{
-
-  height: 140px;
-
-  background-color: #000;
+header {
+  height: 70px;
+  background-color: $main-dark-blue;
   backdrop-filter: blur(20px);
-
-  font-family: "Bebas Neue", sans-serif;
+  font-family: "Hammersmith One", sans-serif;
   transition: all 0.3s ease;
-  font-size: 2.5em;
+
 }
 
-.text-end a{
+.nav a {
+  font-size: 1.4em;
   text-decoration: none;
   color: #fff;
+  cursor: pointer;
+  text-transform: uppercase;
+}
 
+.logo {
+  height: 40px;
   cursor: pointer;
 }
 
-
-header.scrolled {
-  background-color: rgba(12, 12, 12, 0.829);
-  height: 70px;
-  font-size: 2em;
+.avatar{
+  height: 30px;
+  aspect-ratio: 1;
 }
 
-img{
-  height: 50px;
+.logout-link {
+  background-color: $main-red;
+  padding: 10px;
+  border-radius: 10px;
+
+  &:hover {
+    background-color: $dark-red;
+  }
+}
+
+
+.auth-link{
+text-decoration: none;
+color: #fff;
+font-size: 1.2em;
+}
+
+.pointer{
   cursor: pointer;
 }
+
 
 

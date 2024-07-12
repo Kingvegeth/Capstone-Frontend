@@ -9,19 +9,17 @@ import { iUser } from '../../../models/iuser';
 })
 export class CommentComponent {
   @Input() comment!: iComment;
-  @Input() currentUser!: iUser;
+  @Input() currentUser?: iUser;
   @Output() reply = new EventEmitter<number>();
   @Output() editComment = new EventEmitter<iComment>();
   @Output() deleteComment = new EventEmitter<number>();
 
-  replyToComment: { [commentId: number]: boolean } = {};
-  newComments: { [reviewId: number]: Partial<iComment> } = {};
+  // replyToComment: { [commentId: number]: boolean } = {};
+  // newComments: { [reviewId: number]: Partial<iComment> } = {};
 
-  ngOnInit() {
-    console.log('CommentComponent initialized with comment:', this.comment);
-  }
 
   onReply(commentId: number) {
+    console.log('Emitting reply event with commentId:', commentId);
     this.reply.emit(commentId);
   }
 
@@ -33,12 +31,13 @@ export class CommentComponent {
     this.deleteComment.emit(commentId);
   }
 
-  addReply(commentId: number) {
-    console.log('Replying to comment:', commentId);
-    this.reply.emit(commentId);
-  }
+  // addReply(commentId: number) {
+  //   console.log('Replying to comment:', commentId);
+  //   this.reply.emit(commentId);
+  // }
 
   createdByCurrentUser(): boolean {
-    return this.currentUser?.id === this.comment.user?.id;
+    const result = this.currentUser?.id === this.comment.user?.id;
+    return result;
   }
 }

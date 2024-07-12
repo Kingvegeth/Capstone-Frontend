@@ -13,6 +13,12 @@ export class EditCommentModalComponent {
 
   constructor(public activeModal: NgbActiveModal) {}
 
+  ngOnInit() {
+    console.log("edit comment modal");
+
+
+  }
+
   updateComment() {
     this.commentUpdated.emit(this.comment);
     this.activeModal.close();

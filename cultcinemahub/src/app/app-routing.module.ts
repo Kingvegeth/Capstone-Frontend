@@ -33,8 +33,7 @@ const routes: Routes = [
   },
   {
     path:'home',
-    component:HomeComponent,
-    canActivate: [AuthGuard]
+    component:HomeComponent
   },
   {
     path:'profile',
@@ -48,13 +47,11 @@ const routes: Routes = [
   },
   {
     path:'movies',
-    component:MoviesComponent,
-    canActivate: [AuthGuard]
+    component:MoviesComponent
   },
   {
     path:'movies/:id',
-    component:MovieDetailsComponent,
-    canActivate: [AuthGuard]
+    component:MovieDetailsComponent
   }
 
 

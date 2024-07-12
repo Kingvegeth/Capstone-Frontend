@@ -1,7 +1,7 @@
 @import '../../../styles/colors';
 
 #homeBody{
-  background-color: $dark-deep-red;
+
   height: calc(100vh - 240px)
 }
 
@@ -36,6 +36,6 @@
   font-size: 24px;
   font-weight: bold;
   text-align: center;
-  margin-top: 20px;
+
   animation: rainbow 6s infinite linear;
 }

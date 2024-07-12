@@ -24,7 +24,7 @@ import { FastAverageColor } from 'fast-average-color';
 })
 export class MovieDetailsComponent {
   movie: iMovie | undefined;
-  currentUser!: iUser; // Ensure currentUser is not undefined
+  currentUser!: iUser;
   newComments: { [reviewId: number]: Partial<iComment> } = {};
   private fac: FastAverageColor;
 
@@ -41,9 +41,10 @@ export class MovieDetailsComponent {
   }
 
   ngOnInit(): void {
-    this.getMovieDetails();
     this.userSvc.getCurrentUser().subscribe(user => {
       this.currentUser = user;
+      console.log('Fetched current user:', this.currentUser);
+      this.getMovieDetails();
     });
   }
 
@@ -77,7 +78,7 @@ export class MovieDetailsComponent {
       const color = this.fac.getColor(img);
       const movieDetailsWrapper = document.getElementById('movie-details-wrapper');
       if (movieDetailsWrapper) {
-        this.renderer.setStyle(movieDetailsWrapper, 'background', `linear-gradient(to bottom, rgba(0, 0, 0, 0.7), ${color.hex})`);
+        this.renderer.setStyle(movieDetailsWrapper, 'background', `linear-gradient(to bottom, rgba(0, 0, 0, 1), ${color.hex})`);
       }
     };
   }
@@ -133,14 +134,12 @@ export class MovieDetailsComponent {
   }
 
   openAddCommentModal(reviewId?: number, parentId?: number) {
+    console.log('Opening Add Comment Modal with reviewId:', reviewId, 'and parentId:', parentId);
     const modalRef = this.modalService.open(AddCommentModalComponent);
-    if (reviewId !== undefined) {
-      modalRef.componentInstance.reviewId = reviewId;
-    }
-    if (parentId !== undefined) {
-      modalRef.componentInstance.parentId = parentId;
-    }
+    modalRef.componentInstance.reviewId = reviewId;
+    modalRef.componentInstance.parentId = parentId;
     modalRef.componentInstance.commentAdded.subscribe((newComment: iComment) => {
+      console.log('New comment added:', newComment);
       if (newComment.parentId) {
         const review = this.movie?.reviews?.find(r => r.id === newComment.reviewId);
         if (review) {
@@ -192,6 +191,8 @@ export class MovieDetailsComponent {
   }
 
   onReplyComment(commentId: number) {
+    console.log('Handling replyComment event with commentId:', commentId);
+
     const reviewId = this.movie?.reviews?.find(r => r.comments?.some(c => c.id === commentId))?.id;
     if (reviewId !== undefined) {
       const modalRef = this.modalService.open(AddCommentModalComponent);

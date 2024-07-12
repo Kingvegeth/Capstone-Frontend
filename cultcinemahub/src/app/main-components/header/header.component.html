@@ -1,7 +1,6 @@
-<header [ngClass]="{'scrolled': scrolled}" class="sticky-top d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-2 px-3">
-
-  <ul class="nav col-7 col-md-auto mb-2 justify-content-center align-items-center mb-md-0 gap-4">
-    <img routerLink="/home" class="mt-2 me-2" src="../../../assets/img/logo_text_white.png" alt="logo">
+<header [ngClass]="{'scrolled': scrolled}" class="sticky-top d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-2 ps-3 pe-5">
+  <ul class="nav col-7 col-md-auto justify-content-center align-items-center mb-md-0 gap-5">
+    <img routerLink="/home" class="me-2 logo" src="../../../assets/img/logo_text_white.png" alt="logo">
     <a *ngIf="isUserLoggedIn" routerLink="/profile">PROFILO</a>
     <a routerLink="/movies">FILM</a>
     <a routerLink="/people">PEOPLE</a>
@@ -9,14 +8,19 @@
     <li></li>
   </ul>
 
-  <div class="col-md-3 text-end">
-    <a *ngIf="!isUserLoggedIn" routerLink="/auth/login" class="auth-link login-link mx-2">Accedi</a>
-    <a *ngIf="!isUserLoggedIn" routerLink="/auth/register" class="auth-link register-link mx-2">Registrati</a>
-    <div class="row justify-content-end align-items-center gap-3">
-      <!-- <a title="Lista dei desideri" *ngIf="isUserLoggedIn&&!isAdmin" routerLink="/wishlist" class="col-1 nav-link text-white px-2"><i class="fas fa-heart"></i></a>
-      <a title="Carrello" *ngIf="isUserLoggedIn&&!isAdmin"  routerLink="/cart" class="col-1 nav-link text-white px-2"><i class="fas fa-shopping-cart"></i></a> -->
+  <div class="col-md-3 text-end d-flex align-items-center right-buttons justify-content-end">
+    <a *ngIf="!isUserLoggedIn" routerLink="/auth/login" class="auth-link login-link mx-2">ACCEDI</a>
+    <a *ngIf="!isUserLoggedIn" routerLink="/auth/register" class="auth-link register-link mx-2">REGISTRATI</a>
 
-      <a (click)="logout()" *ngIf="isUserLoggedIn" class="col-10 col-md-3 col-lg-2 me-2 logout-link">Esci</a>
+    <div *ngIf="isUserLoggedIn && currentUser" class="dropdown pointer">
+      <a class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+        <img [src]="currentUser.avatar || 'assets/img/default-avatar.png'" alt="avatar" class="rounded-circle me-2 avatar">
+        <span>{{ currentUser.username }}</span>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-end text-small shadow" aria-labelledby="dropdownUser">
+        <li><a class="dropdown-item" routerLink="/profile">Profilo</a></li>
+        <li><a class="dropdown-item" (click)="logout()">Esci</a></li>
+      </ul>
     </div>
   </div>
 </header>
