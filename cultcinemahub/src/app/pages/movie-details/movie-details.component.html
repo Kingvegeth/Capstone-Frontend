@@ -1,4 +1,4 @@
-<div *ngIf="movie" class="container mt-5">
+<div *ngIf="movie" class="container my-5">
   <div class="movie-details-wrapper" id="movie-details-wrapper">
     <div class="overlay"></div>
     <h1>{{ movie.title }}</h1>
@@ -18,9 +18,9 @@
       </div>
     </div>
 
-    <button *ngIf="canAddReview()" class="btn btn-primary mt-3" (click)="openAddReviewModal()">Aggiungi Recensione</button>
+    <button *ngIf="canAddReview()" class="btn btn-primary my-4" (click)="openAddReviewModal()">Aggiungi Recensione</button>
 
-    <h3>Recensioni</h3>
+    <h3 *ngIf="movie.reviews?.length" class="my-3">Recensioni</h3>
     <app-review *ngFor="let review of movie.reviews ?? []"
                 [review]="review"
                 [currentUser]="currentUser"

@@ -7,7 +7,7 @@
       <span  [ngbTooltip]="review.createdAt | date: 'dd/MM/yyyy, HH:mm'">{{ review.createdAt | amTimeAgo }}</span>
       <span *ngIf="review.updatedAt" [ngbTooltip]="review.updatedAt | date: 'dd/MM/yyyy, HH:mm'" class="text-warning"> (Modificata {{ review.updatedAt | amTimeAgo }})</span>
     </p>
-    <p class="card-text text-end">Scritta da: <strong>{{ review.user?.username ?? 'Unknown' }}</strong></p>
+    <p class="card-text text-end">Scritta da <strong>{{ review.user?.username ?? 'Unknown' }}</strong></p>
 
     <div *ngIf="review.comments && review.comments.length > 0" class="comments-section">
       <h4>Commenti</h4>
