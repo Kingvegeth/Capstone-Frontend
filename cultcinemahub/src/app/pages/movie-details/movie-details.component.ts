@@ -106,6 +106,8 @@ export class MovieDetailsComponent {
     return structuredComments;
   }
 
+
+
   openAddReviewModal() {
     const modalRef = this.modalService.open(AddReviewModalComponent);
     modalRef.componentInstance.movieId = this.movie?.id; // Pass the movieId to the modal
@@ -233,6 +235,11 @@ export class MovieDetailsComponent {
         console.error('Error deleting comment:', error);
       }
     );
+  }
+
+  canAddReview(): boolean {
+    if (!this.movie || !this.currentUser) return false;
+    return !this.movie.reviews?.some(review => review.user?.id === this.currentUser.id);
   }
 
 

@@ -7,6 +7,9 @@
 
 body{
   background-color: $main-cream;
+  background-image: url(./assets/img/bg.jpg);
+  background-size: cover;
+
   box-sizing: border-box;
 
 }
@@ -15,11 +18,11 @@ body{
 /* Sfondo scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
-  background-color: #000;
+  background-color: $main-cream;
 }
 
 /* Elemento trascinabile della scrollbar */
 ::-webkit-scrollbar-thumb {
-  background-color: #858585;
+  background-color: $main-red;
   border-radius: 1rem;
 }

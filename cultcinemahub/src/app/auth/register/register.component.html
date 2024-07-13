@@ -1,31 +1,31 @@
-<div class="register-wrapper d-flex justify-content-center align-items-center flex-column" >
+<div id="register-page" class="d-flex flex-column">
 
-  <form class="d-flex flex-column gap-3 p-5 col-6 m-auto text-white" #registerForm="ngForm" (ngSubmit)="signUp()">
-    <h1>Registrati</h1>
+  <div class="register-wrapper d-flex justify-content-center align-items-center flex-column" >
 
-
-
-    <input type="text" name="firstName" [(ngModel)]="registerData.firstName" #firstName="ngModel"
+    <form class="d-flex flex-column gap-3 p-5 col-6 m-auto text-white" #registerForm="ngForm" (ngSubmit)="signUp()">
+      <h1>Registrati</h1>
+      <input type="text" name="firstName" [(ngModel)]="registerData.firstName" #firstName="ngModel"
       class="form-control" placeholder="nome" required title="Nome obbligatorio"
       [ngClass]="{'is-invalid': firstName.invalid && (firstName.dirty || firstName.touched)}">
-    <input type="text" name="lastName" [(ngModel)]="registerData.lastName" #lastName="ngModel"
+      <input type="text" name="lastName" [(ngModel)]="registerData.lastName" #lastName="ngModel"
       class="form-control" placeholder="cognome" required title="Cognome obbligatorio"
       [ngClass]="{'is-invalid': lastName.invalid && (lastName.dirty || lastName.touched)}">
-    <input type="text" name="username" [(ngModel)]="registerData.username" #username="ngModel"
+      <input type="text" name="username" [(ngModel)]="registerData.username" #username="ngModel"
       class="form-control" placeholder="username" required title="Username obbligatorio"
       [ngClass]="{'is-invalid': username.invalid && (username.dirty || username.touched)}">
-    <input type="email" name="email" [(ngModel)]="registerData.email" #email="ngModel"
-      class="form-control register-text" placeholder="email" required email title="Email obbligatoria e deve essere in formato corretto"
+      <input type="email" name="email" [(ngModel)]="registerData.email" #email="ngModel"
+      class="form-control register-text" placeholder="email" required email title="Inserisci un'email valida"
       [ngClass]="{'is-invalid': email.invalid && (email.dirty || email.touched)}">
-    <input type="password" name="password" [(ngModel)]="registerData.password" #password="ngModel"
+      <input type="password" name="password" [(ngModel)]="registerData.password" #password="ngModel"
       class="form-control register-text" placeholder="password" required title="Password obbligatoria"
       [ngClass]="{'is-invalid': password.invalid && (password.dirty || password.touched)}">
-<div class="d-flex align-items-center justify-content-between">
-  <button type="submit" [disabled]="registerForm.invalid" class="btn mt-2">Registrati</button>
-  <div *ngIf="errorMessage" class="error-alert text-white">
-    {{ errorMessage }}
+
+      <div class="d-flex align-items-center justify-content-between">
+        <button type="submit" [disabled]="registerForm.invalid" class="btn btn-dark mt-2">Registrati</button>
+      </div>
+      <!-- <div *ngIf="registerForm.invalid" class="text-warning"> Compila tutti i campi. </div> -->
+
+      <div *ngIf="errorMessage" class="error-alert text-white">{{ errorMessage }}</div>
+    </form>
   </div>
-</div>
-    <div *ngIf="registerForm.invalid" class="text-warning"> Compila tutti i campi per poter proseguire. </div>
-  </form>
 </div>

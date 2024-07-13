@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 
 
@@ -16,8 +16,8 @@ export class MovieService {
 
   constructor(private http: HttpClient) { }
 
-  getAllMovies(page: number, size: number): Observable<{ content: iMovie[], totalPages: number }> {
-    return this.http.get<{ content: iMovie[], totalPages: number }>(`${this.moviesUrl}?page=${page}&size=${size}`).pipe(
+  getAllMovies(page: number, size: number, searchQuery: string = ''): Observable<{ content: iMovie[], totalPages: number }> {
+    return this.http.get<{ content: iMovie[], totalPages: number }>(`${this.moviesUrl}?page=${page}&size=${size}&search=${searchQuery}`).pipe(
       map(response => ({
         ...response,
         content: response.content.map(movie => ({

@@ -19,7 +19,8 @@ export class MoviesComponent {
   isAdmin$!: Observable<boolean>;
   totalPages: number = 0;
   currentPage: number = 0;
-  pageSize: number = 3;
+  pageSize: number = 10;
+  searchQuery: string = '';
 
 
   constructor(
@@ -34,8 +35,8 @@ export class MoviesComponent {
     this.isAdmin$ = this.authSvc.isAdmin();
   }
 
-  loadMovies(page: number = 0): void {
-    this.movieSvc.getAllMovies(page, this.pageSize).subscribe(response => {
+  loadMovies(page: number = 0, searchQuery: string = ''): void {
+    this.movieSvc.getAllMovies(page, this.pageSize, searchQuery).subscribe(response => {
       this.movies = response.content;
       this.totalPages = response.totalPages;
       this.currentPage = page;
@@ -80,5 +81,9 @@ export class MoviesComponent {
     if (page >= 0 && page < this.totalPages) {
       this.loadMovies(page);
     }
+  }
+
+  onSearch(): void {
+    this.loadMovies(0, this.searchQuery);
   }
 }

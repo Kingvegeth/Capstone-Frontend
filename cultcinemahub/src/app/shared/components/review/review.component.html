@@ -3,8 +3,9 @@
     <h3 class="card-title">{{ review.title }}</h3>
     <p class="card-text">{{ review.body }}</p>
     <p class="card-text"><strong>Valutazione:</strong> {{ review.rating }} / 10</p>
-    <p class="card-text"><strong>Data di creazione:</strong>
-      <span [ngbTooltip]="review.createdAt | date: 'dd/MM/yyyy, HH:mm'">{{ review.createdAt | amTimeAgo }}</span>
+    <p class="card-text"><strong>Data di creazione: </strong>
+      <span  [ngbTooltip]="review.createdAt | date: 'dd/MM/yyyy, HH:mm'">{{ review.createdAt | amTimeAgo }}</span>
+      <span *ngIf="review.updatedAt" [ngbTooltip]="review.updatedAt | date: 'dd/MM/yyyy, HH:mm'" class="text-warning"> (Modificata {{ review.updatedAt | amTimeAgo }})</span>
     </p>
     <p class="card-text text-end">Scritta da: <strong>{{ review.user?.username ?? 'Unknown' }}</strong></p>
 

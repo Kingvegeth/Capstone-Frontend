@@ -1,11 +1,8 @@
-<div id="login-page">
+<div id="login-page" class="flex-column">
 
-  <div class="login-wrapper d-flex justify-content-center align-items-center">
+  <div class="login-wrapper d-flex justify-content-center align-items-center position-relative">
     <form class="d-flex flex-column gap-3 text-white p-5 col-6 m-auto" (ngSubmit)="signIn()">
       <h1>Accedi</h1>
-      <div *ngIf="!loginData.username || !loginData.password" class="alert alert-danger" role="alert">
-        Inserisci username e password
-      </div>
 
       <input type="username" name="username" [(ngModel)]="loginData.username" class="form-control login-text" placeholder="username">
       <input type="password" name="password" [(ngModel)]="loginData.password" class="form-control login-text" placeholder="password">
@@ -16,10 +13,11 @@
           <label class="form-check-label" for="rememberMe">Ricordami</label>
         </div>
         <button type="submit" class="btn btn-dark mt-2 ms-auto">Accedi</button>
-        <div *ngIf="errorMessage" class="text-danger fw-bold" role="alert">{{ errorMessage }}</div>
       </div>
 
+
     </form>
+    <div *ngIf="errorMessage" class="fw-bold auth-alert" role="alert">{{ errorMessage }}</div>
   </div>
 
 </div>

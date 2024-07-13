@@ -16,8 +16,10 @@
         <p *ngIf="movie.producers && movie.producers.length"><strong>Produttori:</strong> {{ getProducers() }}</p>
         <p *ngIf="movie.distributor"><strong>Distributore:</strong> {{ movie.distributor.name }}</p>
       </div>
-
     </div>
+
+    <button *ngIf="canAddReview()" class="btn btn-primary mt-3" (click)="openAddReviewModal()">Aggiungi Recensione</button>
+
     <h3>Recensioni</h3>
     <app-review *ngFor="let review of movie.reviews ?? []"
                 [review]="review"

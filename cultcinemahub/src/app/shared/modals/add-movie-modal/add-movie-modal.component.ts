@@ -71,30 +71,50 @@ export class AddMovieModalComponent {
 
     this.isLoading = true;
 
-    const newMovie: iMovie = {
+    const newMovie = {
       title: this.movie.title!,
       year: this.movie.year!,
       duration: this.movie.duration!,
       description: this.movie.description!,
       genres: this.selectedGenres.map(g => g.trim().toUpperCase() as iGenre),
       posterImg: this.movie.posterImg || '',
-      cast: this.selectedCast.map(id => ({ id } as iPerson)),
-      directors: this.selectedDirectors.map(id => ({ id } as iPerson)),
-      screenwriters: this.selectedScreenwriters.map(id => ({ id } as iPerson)),
-      producers: this.selectedProducers.map(id => ({ id } as iCompany)),
-      distributor: this.selectedDistributor ? { id: this.selectedDistributor } as iCompany : undefined
+      castIds: this.selectedCast,
+      directorIds: this.selectedDirectors,
+      screenwriterIds: this.selectedScreenwriters,
+      producerIds: this.selectedProducers,
+      distributorId: this.selectedDistributor
     };
 
     console.log('Creating movie with data:', newMovie);
 
     this.movieService.createMovie(newMovie).subscribe(
       (createdMovie) => {
-        this.movieAdded.emit(createdMovie);
+        console.log('Movie created successfully:', createdMovie);
+        if (this.selectedFile) {
+          this.uploadPoster(createdMovie.id!, this.selectedFile);
+        } else {
+          this.movieAdded.emit(createdMovie);
+          this.activeModal.close();
+          this.isLoading = false;
+        }
+      },
+      (error) => {
+        console.error('Error creating movie:', error);
+        this.isLoading = false;
+      }
+    );
+  }
+
+  uploadPoster(movieId: number, file: File) {
+    this.movieService.uploadPoster(movieId, file).subscribe(
+      (updatedMovie) => {
+        console.log('Poster uploaded successfully:', updatedMovie);
+        this.movieAdded.emit(updatedMovie);
         this.activeModal.close();
         this.isLoading = false;
       },
       (error) => {
-        console.error('Error creating movie:', error);
+        console.error('Error uploading poster:', error);
         this.isLoading = false;
       }
     );
