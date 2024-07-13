@@ -5,6 +5,8 @@ import { map, Observable } from 'rxjs';
 
 import { environment } from '../../environments/environment.development';
 import { iMovie } from '../models/imovie';
+import { iPerson } from '../models/iperson';
+import { iCompany } from '../models/icompany';
 
 
 @Injectable({
@@ -36,8 +38,22 @@ export class MovieService {
     return this.http.post<iMovie>(this.moviesUrl, movie);
   }
 
-  updateMovie(id: number, movie: iMovie): Observable<iMovie> {
-    return this.http.put<iMovie>(`${this.moviesUrl}/${id}`, movie);
+  updateMovie(id: number, movie: any): Observable<iMovie> {
+    const body = {
+      title: movie.title,
+      year: movie.year,
+      duration: movie.duration,
+      description: movie.description,
+      genres: movie.genres,
+      castIds: movie.cast.map((person: iPerson) => person.id),
+      directorIds: movie.directors.map((person: iPerson) => person.id),
+      screenwriterIds: movie.screenwriters.map((person: iPerson) => person.id),
+      producerIds: movie.producers.map((company: iCompany) => company.id),
+      distributorId: movie.distributor ? movie.distributor.id : null,
+      posterImg: movie.posterImg
+    };
+
+    return this.http.put<iMovie>(`${this.moviesUrl}/${id}`, body);
   }
 
   patchMovie(id: number, movie: iMovie): Observable<iMovie> {
