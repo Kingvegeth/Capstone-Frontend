@@ -149,7 +149,17 @@ export class MovieDetailsComponent {
       } else {
         this.movie!.reviews = [newReview];
       }
+      this.updateAverageRating();
+      this.cdr.detectChanges();
     });
+  }
+
+  updateAverageRating(): void {
+    if (this.movie && this.movie.reviews && this.movie.reviews.length > 0) {
+      const totalRating = this.movie.reviews.reduce((sum, review) => sum + (review.rating || 0), 0);
+      const averageRating = totalRating / this.movie.reviews.length;
+      this.movie.averageRating = Math.round(averageRating);
+    }
   }
 
   openEditReviewModal(review: iReview) {
@@ -164,6 +174,8 @@ export class MovieDetailsComponent {
       } else {
         this.movie!.reviews = this.movie!.reviews!.filter(r => r.id !== review.id);
       }
+      this.updateAverageRating();
+      this.cdr.detectChanges();
     });
   }
 
@@ -257,10 +269,13 @@ export class MovieDetailsComponent {
     this.reviewSvc.deleteReview(reviewId).subscribe(() => {
       if (this.movie) {
         this.movie.reviews = this.movie.reviews?.filter(review => review.id !== reviewId);
+        this.updateAverageRating();
+        this.cdr.detectChanges();
       }
     }, (error) => {
       console.error('Error deleting review:', error);
     });
+
   }
 
   deleteComment(commentId: number): void {
