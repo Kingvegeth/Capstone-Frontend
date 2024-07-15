@@ -1,5 +1,5 @@
 import { ReviewService } from './../../services/review.service';
-import { Component, Renderer2 } from '@angular/core';
+import { ChangeDetectorRef, Component, Renderer2 } from '@angular/core';
 import { iMovie } from '../../models/imovie';
 import { ActivatedRoute } from '@angular/router';
 import { MovieService } from '../../services/movie.service';
@@ -52,7 +52,8 @@ export class MovieDetailsComponent {
     private commentSvc: CommentService,
     private userSvc: UsersService,
     private modalService: NgbModal,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private cdr: ChangeDetectorRef
   ) {
     this.fac = new FastAverageColor();
   }
@@ -126,7 +127,7 @@ export class MovieDetailsComponent {
     const structuredComments: iComment[] = [];
 
     comments.forEach(comment => {
-      comment.replies = [];
+      comment.replies = comment.replies || [];
       commentMap[comment.id] = comment;
       if (comment.parentId) {
         commentMap[comment.parentId]?.replies!.push(comment);
@@ -137,7 +138,6 @@ export class MovieDetailsComponent {
 
     return structuredComments;
   }
-
 
 
   openAddReviewModal() {
@@ -168,48 +168,64 @@ export class MovieDetailsComponent {
   }
 
   openAddCommentModal(reviewId?: number, parentId?: number) {
-    console.log('Opening Add Comment Modal with reviewId:', reviewId, 'and parentId:', parentId);
+    console.log('Opening add comment modal for reviewId:', reviewId, 'and parentId:', parentId);
     const modalRef = this.modalService.open(AddCommentModalComponent);
     modalRef.componentInstance.reviewId = reviewId;
     modalRef.componentInstance.parentId = parentId;
     modalRef.componentInstance.commentAdded.subscribe((newComment: iComment) => {
       console.log('New comment added:', newComment);
-      if (newComment.parentId) {
-        const review = this.movie?.reviews?.find(r => r.id === newComment.reviewId);
-        if (review) {
-          const parentComment = this.findCommentById(review.comments!, newComment.parentId);
-          if (parentComment?.replies) {
-            parentComment.replies.push(newComment);
-          } else {
-            parentComment!.replies = [newComment];
-          }
-        }
-      } else if (newComment.reviewId) {
-        const review = this.movie?.reviews?.find(r => r.id === newComment.reviewId);
-        if (review) {
-          if (review.comments) {
-            review.comments.push(newComment);
-          } else {
-            review.comments = [newComment];
-          }
-        }
-      }
+      this.addCommentToReview(newComment);
+      this.cdr.detectChanges();
     });
   }
+
+  addCommentToReview(newComment: iComment): void {
+    console.log('Attempting to add new comment:', newComment);
+
+    if (newComment.parentId) {
+
+      const review = this.movie?.reviews?.find(r =>
+        r.comments?.some(c => c.id === newComment.parentId)
+      );
+      if (review) {
+        console.log('Found review for new comment:', review);
+        const parentComment = this.findCommentById(review.comments!, newComment.parentId);
+        if (parentComment) {
+          console.log('Found parent comment:', parentComment);
+          parentComment.replies = parentComment.replies || [];
+          parentComment.replies.push(newComment);
+          console.log('Added new comment to parent comment replies:', parentComment.replies);
+          this.cdr.detectChanges();
+        } else {
+          console.log('Parent comment not found for id:', newComment.parentId);
+        }
+      } else {
+        console.log('Review not found for parent comment id:', newComment.parentId);
+      }
+    } else if (newComment.reviewId) {
+
+      const review = this.movie?.reviews?.find(r => r.id === newComment.reviewId);
+      if (review) {
+        console.log('Found review for new comment:', review);
+        review.comments = review.comments || [];
+        review.comments.push(newComment);
+        console.log('Added new comment to review comments:', review.comments);
+        this.cdr.detectChanges();
+      } else {
+        console.log('Review not found for id:', newComment.reviewId);
+      }
+    } else {
+      console.log('New comment has neither reviewId nor parentId:', newComment);
+    }
+  }
+
 
 
   openEditCommentModal(comment: iComment) {
     const modalRef = this.modalService.open(EditCommentModalComponent);
     modalRef.componentInstance.comment = comment;
     modalRef.componentInstance.commentUpdated.subscribe((updatedComment: iComment) => {
-      this.commentSvc.updateComment(updatedComment).subscribe(
-        (response) => {
-          this.updateComment(response);
-        },
-        (error) => {
-          console.error('Error updating comment:', error);
-        }
-      );
+      this.updateComment(updatedComment);
     });
   }
 
@@ -228,23 +244,14 @@ export class MovieDetailsComponent {
     console.log('Handling replyComment event with commentId:', commentId);
 
     const reviewId = this.movie?.reviews?.find(r => r.comments?.some(c => c.id === commentId))?.id;
+    console.log('Found reviewId:', reviewId);
     if (reviewId !== undefined) {
-      const modalRef = this.modalService.open(AddCommentModalComponent);
-      modalRef.componentInstance.parentCommentId = commentId;
-      modalRef.componentInstance.reviewId = reviewId;
-      modalRef.componentInstance.commentAdded.subscribe((newComment: iComment) => {
-        const review = this.movie?.reviews?.find(r => r.id === reviewId);
-        if (review) {
-          const parentComment = this.findCommentById(review.comments!, commentId);
-          if (parentComment?.replies) {
-            parentComment.replies.push(newComment);
-          } else {
-            parentComment!.replies = [newComment];
-          }
-        }
-      });
+      this.openAddCommentModal(reviewId, commentId);
+    } else {
+      console.log('Review not found for commentId:', commentId);
     }
   }
+
 
   deleteReview(reviewId: number): void {
     this.reviewSvc.deleteReview(reviewId).subscribe(() => {
@@ -259,14 +266,30 @@ export class MovieDetailsComponent {
   deleteComment(commentId: number): void {
     this.commentSvc.deleteComment(commentId).subscribe(
       () => {
-        this.movie?.reviews?.forEach(review => {
-          review.comments = review.comments?.filter(c => c.id !== commentId);
-        });
+        this.removeCommentFromReview(commentId);
       },
       (error) => {
         console.error('Error deleting comment:', error);
       }
     );
+  }
+
+  removeCommentFromReview(commentId: number): void {
+    this.movie?.reviews?.forEach(review => {
+      review.comments = this.removeCommentById(review.comments!, commentId);
+    });
+  }
+
+  removeCommentById(comments: iComment[], commentId: number): iComment[] {
+    return comments.filter(comment => {
+      if (comment.id === commentId) {
+        return false;
+      }
+      if (comment.replies) {
+        comment.replies = this.removeCommentById(comment.replies, commentId);
+      }
+      return true;
+    });
   }
 
   canAddReview(): boolean {

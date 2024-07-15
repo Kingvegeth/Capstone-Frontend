@@ -2,9 +2,7 @@
   <p><strong>{{ comment.user.username || 'Unknown' }}</strong>: {{ comment.body }}</p>
   <p class="small text-muted">
     <span *ngIf="comment.updatedAt; else created" class="text-warning" [ngbTooltip]="comment.updatedAt | date: 'dd/MM/yyyy, HH:mm'">Modificato {{ comment.updatedAt | amTimeAgo }}</span>
-
     <ng-template #created><span class="text-white" [ngbTooltip]="comment.createdAt | date: 'dd/MM/yyyy, HH:mm'">Creato {{ comment.createdAt | amTimeAgo }}</span></ng-template>
-
   </p>
   <div>
     <div *ngIf="comment.user?.id === currentUser?.id">

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { iComment } from '../../../models/icomment';
 import { iUser } from '../../../models/iuser';
 import { CommentService } from '../../../services/comment.service';
@@ -16,28 +16,28 @@ export class CommentComponent {
   @Output() deleteComment = new EventEmitter<number>();
 
 
-  constructor(private commentService: CommentService) {}
-
-  // replyToComment: { [commentId: number]: boolean } = {};
-  // newComments: { [reviewId: number]: Partial<iComment> } = {};
+  constructor(private commentService: CommentService, private cdr: ChangeDetectorRef) {}
 
 
   ngOnInit(): void {
+    console.log('Loading replies for comment:', this.comment);
     this.loadRepliesForComment(this.comment);
   }
 
   loadRepliesForComment(comment: iComment): void {
-    if (comment.replies && comment.replies.length > 0) {
+    comment.replies = comment.replies || [];
+    if (comment.replies.length > 0) {
       comment.replies.forEach(reply => {
         this.commentService.getCommentById(reply.id!).subscribe(detailedComment => {
           reply.replies = detailedComment.replies || [];
+          console.log('Loaded reply for comment:', reply);
+          this.cdr.detectChanges();
         });
       });
     }
   }
 
   onReply(commentId: number) {
-    console.log('Emitting reply event with commentId:', commentId);
     this.reply.emit(commentId);
   }
 
@@ -49,10 +49,6 @@ export class CommentComponent {
     this.deleteComment.emit(commentId);
   }
 
-  // addReply(commentId: number) {
-  //   console.log('Replying to comment:', commentId);
-  //   this.reply.emit(commentId);
-  // }
 
   createdByCurrentUser(): boolean {
     const result = this.currentUser?.id === this.comment.user?.id;

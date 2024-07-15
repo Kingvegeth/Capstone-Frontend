@@ -21,8 +21,7 @@ export class AddCommentModalComponent {
 
 
 ngOnInit(){
-  console.log(this.parentId);
-
+  console.log('AddCommentModal initialized with reviewId:', this.reviewId, 'and parentId:', this.parentId);
 }
 
 
@@ -52,6 +51,7 @@ ngOnInit(){
 
     this.commentSvc.addComment(comment).subscribe(
         (createdComment) => {
+          console.log('New comment added to service:', createdComment);
             this.commentAdded.emit(createdComment);
             this.activeModal.close();
         },
