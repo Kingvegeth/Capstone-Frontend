@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { iComment } from '../../../models/icomment';
 import { iUser } from '../../../models/iuser';
+import { CommentService } from '../../../services/comment.service';
 
 @Component({
   selector: 'app-comment',
@@ -14,9 +15,26 @@ export class CommentComponent {
   @Output() editComment = new EventEmitter<iComment>();
   @Output() deleteComment = new EventEmitter<number>();
 
+
+  constructor(private commentService: CommentService) {}
+
   // replyToComment: { [commentId: number]: boolean } = {};
   // newComments: { [reviewId: number]: Partial<iComment> } = {};
 
+
+  ngOnInit(): void {
+    this.loadRepliesForComment(this.comment);
+  }
+
+  loadRepliesForComment(comment: iComment): void {
+    if (comment.replies && comment.replies.length > 0) {
+      comment.replies.forEach(reply => {
+        this.commentService.getCommentById(reply.id!).subscribe(detailedComment => {
+          reply.replies = detailedComment.replies || [];
+        });
+      });
+    }
+  }
 
   onReply(commentId: number) {
     console.log('Emitting reply event with commentId:', commentId);

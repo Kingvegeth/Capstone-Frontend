@@ -28,6 +28,23 @@ export class MovieDetailsComponent {
   newComments: { [reviewId: number]: Partial<iComment> } = {};
   private fac: FastAverageColor;
 
+
+  genreTranslation: { [key: string]: string } = {
+    ACTION: 'Azione',
+    ADVENTURE: 'Avventura',
+    ANIMATION: 'Animazione',
+    BIOGRAPHY: 'Biografia',
+    COMEDY: 'Commedia',
+    CRIME: 'Poliziesco',
+    DOCUMENTARY: 'Documentario',
+    DRAMA: 'Drammatico',
+    FANTASY: 'Fantasy',
+    HORROR: 'Horror',
+    MUSICAL: 'Musicale',
+    SCI_FI: 'Fantascienza',
+    THRILLER: 'Thriller'
+  };
+
   constructor(
     private route: ActivatedRoute,
     private movieSvc: MovieService,
@@ -43,7 +60,6 @@ export class MovieDetailsComponent {
   ngOnInit(): void {
     this.userSvc.getCurrentUser().subscribe(user => {
       this.currentUser = user;
-      console.log('Fetched current user:', this.currentUser);
       this.getMovieDetails();
     });
   }
@@ -53,15 +69,36 @@ export class MovieDetailsComponent {
     this.movieSvc.getMovieById(id).subscribe((movie: iMovie) => {
       this.movie = movie;
       this.setBackgroundColor(movie.posterImg);
-      this.movie.reviews?.forEach(review => {
-        this.newComments[review.id!] = {}; // Initialize newComments for each review
-        this.reviewSvc.getReviewById(review.id!).subscribe(detailedReview => {
-          const index = this.movie!.reviews!.findIndex(r => r.id === review.id);
-          if (index !== -1) {
-            this.movie!.reviews![index] = detailedReview;
-          }
+      this.loadReviewsAndComments();
+    });
+  }
+
+  loadReviewsAndComments(): void {
+    this.movie?.reviews?.forEach(review => {
+      this.reviewSvc.getReviewById(review.id!).subscribe(detailedReview => {
+        const index = this.movie!.reviews!.findIndex(r => r.id === review.id);
+        if (index !== -1) {
+          this.movie!.reviews![index] = detailedReview;
           this.loadCommentsForReview(detailedReview);
-        });
+        }
+      });
+    });
+  }
+
+  loadCommentsForReview(review: iReview): void {
+    this.commentSvc.getCommentsByReviewId(review.id!).subscribe(comments => {
+      review.comments = this.structureComments(comments);
+      review.comments.forEach(comment => {
+        this.loadRepliesForComment(comment);
+      });
+    });
+  }
+
+  loadRepliesForComment(comment: iComment): void {
+    this.commentSvc.getCommentById(comment.id!).subscribe(detailedComment => {
+      comment.replies = detailedComment.replies || [];
+      comment.replies.forEach(reply => {
+        this.loadRepliesForComment(reply); // Load nested replies
       });
     });
   }
@@ -83,11 +120,6 @@ export class MovieDetailsComponent {
     };
   }
 
-  loadCommentsForReview(review: iReview): void {
-    this.commentSvc.getCommentsByReviewId(review.id!).subscribe(comments => {
-      review.comments = this.structureComments(comments);
-    });
-  }
 
   structureComments(comments: iComment[]): iComment[] {
     const commentMap: { [key: number]: iComment } = {};
@@ -274,8 +306,8 @@ export class MovieDetailsComponent {
     (event.target as HTMLImageElement).src = 'assets/img/default/default-movie.png';
   }
 
-  getGenres(): string {
-    return this.movie?.genres?.join(', ') || 'N/A';
+  getGenres(): string[] {
+    return this.movie?.genres?.map(genre => this.genreTranslation[genre]) || [];
   }
 
   getCast(): string {

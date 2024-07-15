@@ -1,15 +1,13 @@
-<header [ngClass]="{'scrolled': scrolled}" class="sticky-top d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-2 ps-3 pe-5">
-  <ul class="nav col-7 col-md-auto justify-content-center align-items-center mb-md-0 gap-5">
-    <img routerLink="/home" class="me-2 logo" src="../../../assets/img/logo_text_white.png" alt="logo">
-    <a routerLink="/movies">FILM</a>
-    <a *ngIf="isAdmin" routerLink="/people">PEOPLE</a>
-    <a *ngIf="isAdmin" routerLink="/companies">COMPANIES</a>
-    <li></li>
+<header [ngClass]="{'scrolled': scrolled}" class="sticky-top d-flex flex-wrap align-items-center justify-content-between py-2 ps-3 pe-5">
+  <ul class="nav justify-content-center align-items-center mb-md-0 gap-5">
+    <img routerLink="/home" class="me-2 logo large-logo" src="../../../assets/img/logo-film.png" alt="logo">
+    <img routerLink="/home" class="me-2 logo small-logo" src="../../../assets/img/film.png" alt="logo">
+    <li class="large-view"><a routerLink="/movies">FILM</a></li>
+    <li *ngIf="isAdmin" class="large-view"><a routerLink="/people">PEOPLE</a></li>
+    <li *ngIf="isAdmin" class="large-view"><a routerLink="/companies">COMPANIES</a></li>
   </ul>
 
-  <div class="col-md-3 text-end d-flex align-items-center right-buttons justify-content-end">
-    <a *ngIf="!isUserLoggedIn" routerLink="/auth/login" class="auth-link login-link mx-2">ACCEDI</a>
-    <a *ngIf="!isUserLoggedIn" routerLink="/auth/register" class="auth-link register-link mx-2">REGISTRATI</a>
+  <div class=" text-end d-flex align-items-center right-buttons justify-content-end">
 
     <div *ngIf="isUserLoggedIn && currentUser" class="dropdown pointer">
       <a class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">

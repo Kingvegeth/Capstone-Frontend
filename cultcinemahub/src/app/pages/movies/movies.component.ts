@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MovieService } from '../../services/movie.service';
 import { iMovie } from '../../models/imovie';
-import { Observable } from 'rxjs';
+import { debounceTime, Observable, Subject } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddMovieModalComponent } from '../../shared/modals/add-movie-modal/add-movie-modal.component';
@@ -21,7 +21,7 @@ export class MoviesComponent {
   currentPage: number = 0;
   pageSize: number = 10;
   searchQuery: string = '';
-
+  private searchSubject = new Subject<string>();
 
   constructor(
     private movieSvc: MovieService,
@@ -33,6 +33,11 @@ export class MoviesComponent {
   ngOnInit(): void {
     this.loadMovies();
     this.isAdmin$ = this.authSvc.isAdmin();
+    this.searchSubject.pipe(
+      debounceTime(300)  // Aggiunge un ritardo di 300ms prima di inviare la richiesta
+    ).subscribe(searchQuery => {
+      this.loadMovies(0, searchQuery);
+    });
   }
 
   loadMovies(page: number = 0, searchQuery: string = ''): void {
@@ -67,6 +72,9 @@ export class MoviesComponent {
         this.movies[index] = updatedMovie;
       }
     });
+    modalRef.componentInstance.movieDeleted.subscribe((deletedMovieId: number) => {
+      this.movies = this.movies.filter(m => m.id !== deletedMovieId);
+    });
   }
 
   goToMovieDetails(movieId: number | undefined) {
@@ -84,6 +92,6 @@ export class MoviesComponent {
   }
 
   onSearch(): void {
-    this.loadMovies(0, this.searchQuery);
+    this.searchSubject.next(this.searchQuery);
   }
 }

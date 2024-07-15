@@ -31,8 +31,12 @@ h1 {
   height: 400px;
   width: fit-content;
   border-radius: 5px;
-  transition: all 0.5s;
+  transition: all 0.2s;
+
+  margin: 0 auto;
 }
+
+
 
 .card-img-container:hover{
   cursor: pointer;

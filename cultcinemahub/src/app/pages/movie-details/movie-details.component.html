@@ -1,13 +1,15 @@
-<div *ngIf="movie" class="container my-5">
+<div *ngIf="movie" class="container">
   <div class="movie-details-wrapper" id="movie-details-wrapper">
     <div class="overlay"></div>
     <h1>{{ movie.title }}</h1>
-    <div class="movie-details-content d-flex align-items-center justify-content-start gap-5">
+    <div class="movie-details-content d-flex align-items-start justify-content-start gap-5">
       <img [src]="movie.posterImg || 'assets/img/default/default-movie.png'" (error)="onImageError($event)" class="img-thumbnail mt-2" alt="Poster">
       <div class="details-text">
+        <span *ngFor="let genre of getGenres()" class="badge rounded-pill text-bg-secondary me-1 my-5">{{ genre }}</span>
         <p><strong>Anno:</strong> {{ movie.year }}</p>
         <p><strong>Durata:</strong> {{ movie.duration }} minuti</p>
-        <p><strong>Generi:</strong> {{ getGenres() }}</p>
+
+
         <p><strong>Descrizione:</strong> {{ movie.description }}</p>
         <p><strong>Valutazione Media:</strong> {{ getAverageRating() }}</p>
         <p *ngIf="movie.cast && movie.cast.length"><strong>Cast:</strong> {{ getCast() }}</p>
