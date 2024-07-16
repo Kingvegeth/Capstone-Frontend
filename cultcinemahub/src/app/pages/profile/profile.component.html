@@ -1,11 +1,10 @@
 <div id="profile-page">
-
   <div class="profile-container">
     <h1>Profilo Utente</h1>
     <div class="avatar-container">
       <img *ngIf="user.avatar" [src]="user.avatar" alt="User Avatar" class="avatar">
       <img *ngIf="!user.avatar" src="../../../assets/img/default/default-avatar.png" alt="Default Avatar" class="avatar">
-      <div class="avatar-overlay"  (click)="fileInput.click()">
+      <div class="avatar-overlay" (click)="fileInput.click()">
         <i class="change-avatar-btn fa-solid fa-upload"></i>
       </div>
       <input type="file" id="avatar" (change)="onFileSelected($event)" hidden #fileInput>
@@ -14,52 +13,59 @@
       <div class="form-group">
         <div class="form-field">
           <label for="firstName">Nome</label>
-          <div *ngIf="!editMode['firstName']">
-            {{ user.firstName }}
-            <button type="button" (click)="toggleEdit('firstName')">✏️</button>
-          </div>
-          <div *ngIf="editMode['firstName']">
-            <input type="text" id="firstName" [(ngModel)]="user.firstName" name="firstName" required />
-            <button type="button" (click)="confirmEdit('firstName')">✔️</button>
+          <div class="editable-field">
+            <div *ngIf="!editMode['firstName']">
+              {{ user.firstName }}
+            </div>
+            <a *ngIf="!editMode['firstName']" type="button" (click)="toggleEdit('firstName')"><i class="fa-solid fa-pen"></i></a>
+            <div *ngIf="editMode['firstName']">
+              <input type="text" id="firstName" [(ngModel)]="user.firstName" name="firstName" required />
+            </div>
+            <a *ngIf="editMode['firstName']" type="button" (click)="confirmEdit('firstName')"><i class="fa-solid fa-check"></i></a>
           </div>
         </div>
         <div class="form-field">
           <label for="lastName">Cognome</label>
-          <div *ngIf="!editMode['lastName']">
-            {{ user.lastName }}
-            <button type="button" (click)="toggleEdit('lastName')">✏️</button>
-          </div>
-          <div *ngIf="editMode['lastName']">
-            <input type="text" id="lastName" [(ngModel)]="user.lastName" name="lastName" required />
-            <button type="button" (click)="confirmEdit('lastName')">✔️</button>
+          <div class="editable-field">
+            <div *ngIf="!editMode['lastName']">
+              {{ user.lastName }}
+            </div>
+            <a *ngIf="!editMode['lastName']" type="button" (click)="toggleEdit('lastName')"><i class="fa-solid fa-pen"></i></a>
+            <div *ngIf="editMode['lastName']">
+              <input type="text" id="lastName" [(ngModel)]="user.lastName" name="lastName" required />
+            </div>
+            <a *ngIf="editMode['lastName']" type="button" (click)="confirmEdit('lastName')"><i class="fa-solid fa-check"></i></a>
           </div>
         </div>
       </div>
       <div class="form-group">
         <div class="form-field">
           <label for="username">Username</label>
-          <div *ngIf="!editMode['username']">
-            {{ user.username }}
-            <button type="button" (click)="toggleEdit('username')">✏️</button>
-          </div>
-          <div *ngIf="editMode['username']">
-            <input type="text" id="username" [(ngModel)]="user.username" name="username" required />
-            <button type="button" (click)="confirmEdit('username')">✔️</button>
+          <div class="editable-field">
+            <div *ngIf="!editMode['username']">
+              {{ user.username }}
+            </div>
+            <a *ngIf="!editMode['username']" type="button" (click)="toggleEdit('username')"><i class="fa-solid fa-pen"></i></a>
+            <div *ngIf="editMode['username']">
+              <input type="text" id="username" [(ngModel)]="user.username" name="username" required />
+            </div>
+            <a *ngIf="editMode['username']" type="button" (click)="confirmEdit('username')"><i class="fa-solid fa-check"></i></a>
           </div>
         </div>
         <div class="form-field">
           <label for="email">Email</label>
-          <div *ngIf="!editMode['email']">
-            {{ user.email }}
-            <button type="button" (click)="toggleEdit('email')">✏️</button>
-          </div>
-          <div *ngIf="editMode['email']">
-            <input type="email" id="email" [(ngModel)]="user.email" name="email" required />
-            <button type="button" (click)="confirmEdit('email')">✔️</button>
+          <div class="editable-field">
+            <div *ngIf="!editMode['email']">
+              {{ user.email }}
+            </div>
+            <a *ngIf="!editMode['email']" type="button" (click)="toggleEdit('email')"><i class="fa-solid fa-pen"></i></a>
+            <div *ngIf="editMode['email']">
+              <input type="email" id="email" [(ngModel)]="user.email" name="email" required />
+            </div>
+            <a *ngIf="editMode['email']" type="button" (click)="confirmEdit('email')"><i class="fa-solid fa-check"></i></a>
           </div>
         </div>
       </div>
     </form>
   </div>
-
 </div>

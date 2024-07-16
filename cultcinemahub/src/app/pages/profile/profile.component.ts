@@ -61,4 +61,5 @@ export class ProfileComponent {
       this.editMode[field] = false;
     }
   }
+
 }

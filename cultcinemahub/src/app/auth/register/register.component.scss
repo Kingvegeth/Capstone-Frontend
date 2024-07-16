@@ -10,8 +10,31 @@
 
 .register-wrapper{
   border-radius: 30px;
-  background-color: $main-blue-transparent2;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.418), $main-dark-blue);
+  box-shadow: inset 0 -5px 10px rgba(255, 255, 255, 0.473);
   width: 700px;
 
 }
 
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+.register-wrapper.loading {
+  opacity: 0.5;
+  pointer-events: none;
+}

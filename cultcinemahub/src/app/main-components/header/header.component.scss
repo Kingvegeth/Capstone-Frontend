@@ -7,8 +7,10 @@ header {
   font-family: "Hammersmith One", sans-serif;
   transition: all 0.3s ease;
 
+
   &.scrolled {
     background-color: $main-blue-transparent;
+    box-shadow: inset 0 -2px 8px rgba(255, 255, 255, 0.26);
   }
 }
 

@@ -1,0 +1,34 @@
+.hero-wrapper {
+
+  height: calc(70vh - 70px);
+  background-image: url(../../../../assets/img/bg.jpg);
+  background-size: cover;
+  box-shadow: inset 0 -10px 40px rgba(0, 0, 0, 0.432);
+  text-shadow: 2px 2px 3px #000000;
+}
+
+.hero-title{
+  text-align: center;
+  margin-bottom: 1.35em;
+
+}
+
+.hero-container {
+
+  max-width: 60%;
+
+  color: #fff;
+}
+
+.overlay{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+p{
+  margin-block: 1.4em;
+}

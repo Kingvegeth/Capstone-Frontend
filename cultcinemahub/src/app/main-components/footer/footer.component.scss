@@ -3,9 +3,30 @@
 footer{
   background-color: $main-dark-blue;
   height: 100px;
+  box-sizing: border-box;
+  padding: 20px;
 
-  margin-bottom: 0;
-  padding-block: 55px 15px;
+  p{
+    font-size: 0.8em;
+    color: rgba(255, 255, 255, 0.568);
+  }
+
+  a{
+    text-decoration: none;
+  }
+
+  .fa-brands{
+    font-size: 1.7em;
+    margin-inline: 8px;
+    margin-bottom: 10px;
+    color: rgba(255, 255, 255, 0.568);
+
+    &:hover{
+      color: $main-blue;
+      color: #fff;
+    }
+  }
+
 }
 
 

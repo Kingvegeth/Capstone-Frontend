@@ -1,3 +1,17 @@
-<div id="homeBody" class="text-center text-white">
-  <p class="fs-1 rainbow">PAGINA HOME - LAVORI IN CORSO</p>
+<div class="top-rated-movies">
+  <h2>Classifica dei film più votati</h2>
+  <ul>
+    <li *ngFor="let movie of topRatedMovies" [ngStyle]="{'width': getWidthByRating(movie.averageRating)}">
+      <div class="movie-details">
+        <img [src]="movie.posterImg || 'assets/img/default/default-movie.png'" alt="{{ movie.title }}" class="poster pointer" (click)="goToMovieDetails(movie.id)">
+        <div class="info">
+          <h3 class="pointer" (click)="goToMovieDetails(movie.id)">{{ movie.title }}</h3>
+          <p>Valutazione media: {{ movie.averageRating || 'N/A' }}
+            <span *ngIf="movie.reviews?.length === 1">(su {{movie.reviews?.length}} recensione)</span>
+            <span *ngIf="movie.reviews?.length !== 1">(su {{movie.reviews?.length}} recensioni)</span>
+          </p>
+        </div>
+      </div>
+    </li>
+  </ul>
 </div>

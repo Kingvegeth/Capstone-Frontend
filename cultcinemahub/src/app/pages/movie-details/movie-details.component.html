@@ -1,11 +1,11 @@
-<div *ngIf="movie" class="container">
+<div *ngIf="movie" class="container my-5">
   <div class="movie-details-wrapper" id="movie-details-wrapper">
     <div class="overlay"></div>
     <h1>{{ movie.title }}</h1>
     <div class="movie-details-content d-flex align-items-start justify-content-start gap-5">
       <img [src]="movie.posterImg || 'assets/img/default/default-movie.png'" (error)="onImageError($event)" class="img-thumbnail mt-2" alt="Poster">
       <div class="details-text">
-        <span *ngFor="let genre of getGenres()" class="badge rounded-pill text-bg-secondary me-1 my-5">{{ genre }}</span>
+        <span *ngFor="let genre of getGenres()" class="badge rounded-pill text-bg-secondary me-1 mt-3 mb-5">{{ genre }}</span>
         <p><strong>Anno:</strong> {{ movie.year }}</p>
         <p><strong>Durata:</strong> {{ movie.duration }} minuti</p>
 

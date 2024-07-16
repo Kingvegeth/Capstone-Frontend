@@ -142,7 +142,7 @@ export class MovieDetailsComponent {
 
   openAddReviewModal() {
     const modalRef = this.modalService.open(AddReviewModalComponent);
-    modalRef.componentInstance.movieId = this.movie?.id; // Pass the movieId to the modal
+    modalRef.componentInstance.movieId = this.movie?.id;
     modalRef.componentInstance.reviewAdded.subscribe((newReview: iReview) => {
       if (this.movie?.reviews) {
         this.movie.reviews.push(newReview);

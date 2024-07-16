@@ -35,6 +35,10 @@ import { AddReviewModalComponent } from './shared/modals/add-review-modal/add-re
 import { EditReviewModalComponent } from './shared/modals/edit-review-modal/edit-review-modal.component';
 import { AddCommentModalComponent } from './shared/modals/add-comment-modal/add-comment-modal.component';
 import { EditCommentModalComponent } from './shared/modals/edit-comment-modal/edit-comment-modal.component';
+import { ActivationErrorComponent } from './pages/activation/activation-error/activation-error.component';
+import { ActivationSuccessComponent } from './pages/activation/activation-success/activation-success.component';
+import { ActivationComponent } from './pages/activation/activation/activation.component';
+import { HeroComponent } from './shared/components/hero/hero.component';
 
 registerLocaleData(localeIt);
 moment.locale('it');
@@ -63,7 +67,11 @@ moment.locale('it');
     AddReviewModalComponent,
     EditReviewModalComponent,
     AddCommentModalComponent,
-    EditCommentModalComponent
+    EditCommentModalComponent,
+    ActivationErrorComponent,
+    ActivationSuccessComponent,
+    ActivationComponent,
+    HeroComponent
   ],
   imports: [
     BrowserModule,

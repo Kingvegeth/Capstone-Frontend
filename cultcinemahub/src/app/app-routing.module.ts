@@ -9,6 +9,10 @@ import { UnderConstructionComponent } from './pages/under-construction/under-con
 import { PeopleComponent } from './pages/people/people.component';
 import { CompaniesComponent } from './pages/companies/companies.component';
 import { MovieDetailsComponent } from './pages/movie-details/movie-details.component';
+import { ActivationSuccessComponent } from './pages/activation/activation-success/activation-success.component';
+import { ActivationErrorComponent } from './pages/activation/activation-error/activation-error.component';
+import { ActivationComponent } from './pages/activation/activation/activation.component';
+import { AdminGuard } from './auth/admin.guard';
 
 const routes: Routes = [
   {
@@ -38,12 +42,12 @@ const routes: Routes = [
   {
     path:'profile',
     component:ProfileComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard,AdminGuard]
   },
   {
     path:'people',
     component:PeopleComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard,AdminGuard]
   },
   {
     path:'movies',
@@ -52,6 +56,18 @@ const routes: Routes = [
   {
     path:'movies/:id',
     component:MovieDetailsComponent
+  },
+  {
+    path: 'activate',
+    component: ActivationComponent
+  },
+  {
+    path:'activation-success',
+    component:ActivationSuccessComponent
+  },
+  {
+    path:'activation-error',
+    component:ActivationErrorComponent
   }
 
 

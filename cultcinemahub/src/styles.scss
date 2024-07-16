@@ -2,6 +2,7 @@
 @import './styles/colors';
 
 $primary:$main-blue;
+$info:$main-red;
 
 @import 'bootstrap/scss/bootstrap';
 
@@ -12,6 +13,9 @@ body{
   background-color: $main-cream;
   background-image: url(./assets/img/bg.jpg);
   background-size: cover;
+
+  font-family: "Montserrat", sans-serif;
+
 
 
 
@@ -28,4 +32,9 @@ body{
 ::-webkit-scrollbar-thumb {
   background-color: $main-red;
   border-radius: 1rem;
+}
+
+h1{
+  text-transform: uppercase;
+  font-weight: 600;
 }

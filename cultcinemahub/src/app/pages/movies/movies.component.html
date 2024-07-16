@@ -5,7 +5,7 @@
     <input type="text" class="form-control" placeholder="Cerca per titolo" [(ngModel)]="searchQuery" (input)="onSearch()">
 
   </div>
-  <div *ngIf="movies.length === 0" class="alert alert-dark ">Nessun film trovato contenente "{{searchQuery}}" nel titolo.</div>
+  <div *ngIf="movies.length === 0" class="alert alert-info ">Nessun film trovato contenente "{{searchQuery}}" nel titolo.</div>
 
   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gy-4  text-center">
     <div *ngFor="let movie of movies" class="col">

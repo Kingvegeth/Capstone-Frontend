@@ -12,6 +12,7 @@ export class RegisterComponent {
 
   registerData: Partial<iUser> = {};
   errorMessage: string = '';
+  isLoading: boolean = false;
 
   constructor(
     private authSvc: AuthService,
@@ -19,12 +20,15 @@ export class RegisterComponent {
   ) { }
 
   signUp(): void {
+    this.isLoading = true;
     this.authSvc.register(this.registerData)
       .subscribe({
         next: data => {
+          this.isLoading = false;
           this.router.navigate(['/']);
         },
         error: err => {
+          this.isLoading = false;
           console.error('Error during registration:', err);
           this.errorMessage = err.message;
           setTimeout(() => {

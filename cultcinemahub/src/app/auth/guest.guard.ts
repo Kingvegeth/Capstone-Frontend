@@ -16,7 +16,7 @@ export class GuestGuard{
     state: RouterStateSnapshot): MaybeAsync<GuardResult> {
 
     if(this.authSvc.syncIsLoggedIn){
-      this.router.navigate(['/wip'])
+      this.router.navigate(['/home'])
     }
 
     return !this.authSvc.syncIsLoggedIn

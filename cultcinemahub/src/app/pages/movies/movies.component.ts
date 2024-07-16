@@ -19,7 +19,7 @@ export class MoviesComponent {
   isAdmin$!: Observable<boolean>;
   totalPages: number = 0;
   currentPage: number = 0;
-  pageSize: number = 10;
+  pageSize: number = 12;
   searchQuery: string = '';
   private searchSubject = new Subject<string>();
 

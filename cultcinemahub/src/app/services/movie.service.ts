@@ -34,6 +34,10 @@ export class MovieService {
     return this.http.get<iMovie>(`${this.moviesUrl}/${id}`);
   }
 
+  getTopRatedMovies(limit: number): Observable<iMovie[]> {
+    return this.http.get<iMovie[]>(`${this.moviesUrl}/top-rated?limit=${limit}`);
+  }
+
   createMovie(movie: iMovie): Observable<iMovie> {
     return this.http.post<iMovie>(this.moviesUrl, movie);
   }

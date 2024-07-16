@@ -2,6 +2,8 @@
 
 
 
+
+
 #login-page {
   display: flex;
   justify-content: center;
@@ -12,7 +14,8 @@
 
 .login-wrapper{
   border-radius: 30px;
-  background-color: $main-blue-transparent2;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.418), $main-dark-blue);
+  box-shadow: inset 0 -5px 10px rgba(255, 255, 255, 0.473);
   width: 700px;
 
 }
