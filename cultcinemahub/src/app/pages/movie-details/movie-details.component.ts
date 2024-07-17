@@ -35,7 +35,7 @@ export class MovieDetailsComponent {
     ANIMATION: 'Animazione',
     BIOGRAPHY: 'Biografia',
     COMEDY: 'Commedia',
-    CRIME: 'Poliziesco',
+    CRIME: 'Giallo',
     DOCUMENTARY: 'Documentario',
     DRAMA: 'Drammatico',
     FANTASY: 'Fantasy',

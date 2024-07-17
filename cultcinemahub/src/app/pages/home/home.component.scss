@@ -63,3 +63,27 @@
 .pointer{
   cursor: pointer;
 }
+
+.home-links{
+  text-align: end;
+  padding: 10px 50px;
+  background-color: $dark-red-transparent ;
+  background: linear-gradient(270deg, rgba(0,0,0,1) 10%, rgba(255,255,255,0) 44%);
+
+
+
+
+
+  //backdrop-filter: blur(20px);
+
+  position: sticky;
+  top: 70px;
+  a{
+    text-decoration: none;
+    color: #fff;
+    text-transform: uppercase;
+    &:hover{
+      text-decoration: underline;
+    }
+  }
+}

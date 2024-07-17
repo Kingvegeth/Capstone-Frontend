@@ -2,9 +2,8 @@
   <ul class="nav justify-content-center align-items-center mb-md-0 gap-5">
     <img routerLink="/home" class="me-2 logo large-logo" src="../../../assets/img/logo-film.png" alt="logo">
     <img routerLink="/home" class="me-2 logo small-logo" src="../../../assets/img/film.png" alt="logo">
-    <li class="large-view"><a routerLink="/movies">Cerca un film</a></li>
-    <li *ngIf="isAdmin" class="large-view"><a routerLink="/people">PEOPLE</a></li>
-    <li *ngIf="isAdmin" class="large-view"><a routerLink="/companies">COMPANIES</a></li>
+
+
   </ul>
 
   <div class=" text-end d-flex align-items-center right-buttons justify-content-end">
@@ -17,6 +16,8 @@
         <span>{{ currentUser.username }}</span>
       </a>
       <ul class="dropdown-menu dropdown-menu-end text-small shadow" aria-labelledby="dropdownUser">
+        <li *ngIf="isAdmin"><a  class="dropdown-item" routerLink="/companies">Companies</a></li>
+        <li *ngIf="isAdmin"><a class="dropdown-item" routerLink="/people">People</a></li>
         <li><a class="dropdown-item" routerLink="/profile">Profilo</a></li>
         <li><a class="dropdown-item" (click)="logout()">Esci</a></li>
       </ul>

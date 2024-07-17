@@ -1,4 +1,7 @@
-<div class="top-rated-movies">
+<div class="home-links">
+  <a routerLink="/movies"> Visualizza il catalogo </a>
+</div>
+<div class="top-rated-movies container">
   <h2>Classifica dei film più votati</h2>
   <ul>
     <li *ngFor="let movie of topRatedMovies" [ngStyle]="{'width': getWidthByRating(movie.averageRating)}">
